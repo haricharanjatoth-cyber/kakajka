@@ -245,9 +245,18 @@
 <script>
 /* categories.js — inlined directly into this page (kept inline after
    repeated deploy/caching issues serving a standalone /categories.js
-   with the right MIME type). Depends on config.js, loaded above. */
+   with the right MIME type). Depends on config.js, loaded above.
+
+   Page title on /categories/<slug> is derived directly from the slug
+   itself (slugToTitle), not looked up from matching video data, and
+   is now applied to document.title (browser tab / SEO title) in
+   addition to the on-page <h1>#gridTitle — canonical + OG/Twitter
+   meta tags are updated too via updateMetaForSlug(). */
 (function () {
   "use strict";
+
+  const SITE_NAME = "seXvid18";
+  const SITE_ORIGIN = "https://example.com";
 
   let allVideos = [];
   let filtered = [];
@@ -274,15 +283,48 @@
     return Array.isArray(video.tags) && video.tags.some((t) => normalizeName(t) === key);
   }
 
-  function findDisplayName(key, rawSlug) {
-    for (const v of allVideos) {
-      if (normalizeName(v.category) === key) return v.category;
-    }
-    for (const v of allVideos) {
-      const hit = (v.tags || []).find((t) => normalizeName(t) === key);
-      if (hit) return hit;
-    }
-    return rawSlug;
+  // Converts a URL slug like "big-tits" or "hd-porn" into a display
+  // title like "Big Tits" / "Hd Porn". Purely string-derived from the
+  // slug itself — no dependency on matching video data, so the title
+  // is always consistent and works even for a slug with zero matches.
+  function slugToTitle(rawSlug) {
+    return decodeURIComponent(rawSlug)
+      .replace(/[-_]+/g, " ")
+      .trim()
+      .split(" ")
+      .filter(Boolean)
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+  }
+
+  // Sets document.title, the canonical link, and OG/Twitter meta tags
+  // to reflect the current view. Call with rawSlug=null for the
+  // landing page (no slug in the URL).
+  function updateMetaForView(displayName, rawSlug) {
+    const isLanding = !rawSlug;
+    const pageTitle = isLanding ? `Categories — ${SITE_NAME}` : `${displayName} — ${SITE_NAME}`;
+    const desc = isLanding
+      ? `Browse ${SITE_NAME} by category and tag.`
+      : `Browse ${displayName} videos on ${SITE_NAME}.`;
+    const url = isLanding
+      ? `${SITE_ORIGIN}/categories/`
+      : `${SITE_ORIGIN}/categories/${rawSlug}`;
+
+    document.title = pageTitle;
+
+    const canonical = document.getElementById("canonicalLink");
+    if (canonical) canonical.setAttribute("href", url);
+
+    const setMeta = (selector, value) => {
+      const el = document.querySelector(selector);
+      if (el) el.setAttribute("content", value);
+    };
+    setMeta('meta[name="description"]', desc);
+    setMeta('meta[property="og:title"]', pageTitle);
+    setMeta('meta[property="og:description"]', desc);
+    setMeta('meta[property="og:url"]', url);
+    setMeta('meta[name="twitter:title"]', pageTitle);
+    setMeta('meta[name="twitter:description"]', desc);
   }
 
   function renderBatch() {
@@ -349,6 +391,7 @@
 
   function renderLandingGrid() {
     document.getElementById("gridTitle").textContent = "Browse Categories & Tags";
+    updateMetaForView(null, null);
     showLanding();
 
     const categoryCounts = {};
@@ -395,10 +438,13 @@
   }
 
   function renderCategoryListing(rawSlug) {
-    const key = normalizeName(rawSlug);
-    const displayName = findDisplayName(key, rawSlug);
+    const key = normalizeName(decodeURIComponent(rawSlug));
+    const displayName = slugToTitle(rawSlug);
 
+    // Title comes straight from the slug now — updates both the
+    // on-page <h1> and the actual browser tab title / SEO meta tags.
     document.getElementById("gridTitle").textContent = displayName;
+    updateMetaForView(displayName, rawSlug);
     showVideoGrid();
 
     filtered = allVideos.filter((v) => matchesKey(v, key));
