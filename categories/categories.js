@@ -198,7 +198,8 @@
     const key = normalizeName(decodeURIComponent(rawSlug));
     const displayName = findDisplayName(key, rawSlug);
 
-    document.getElementById("gridTitle").textContent = `Category: ${displayName}`;
+    // Title now shows just the category/tag name, no "Category:" prefix.
+    document.getElementById("gridTitle").textContent = displayName;
     showVideoGrid();
 
     filtered = allVideos.filter((v) => matchesKey(v, key));
