@@ -4,7 +4,7 @@
    /_redirects rewrite — see config.js).
    Depends on config.js having already loaded (fetchAllVideos,
    fetchVideoApiData, fetchDirectVideoUrl, videoHref, authorHref,
-   currentVideoSlugFromUrl, slugifyName, normalizeName,
+   categoryHref, currentVideoSlugFromUrl, slugifyName, normalizeName,
    videosByAuthorName, videoCardHtml, adCardHtml, pickRowAdKey,
    fillAdSlot, wireLazyAdCards, PLACEHOLDER_IMAGE).
    ========================================================= */
@@ -143,14 +143,19 @@
     document.getElementById("watchViews").style.display = "none";
     document.getElementById("watchDate").textContent = formatDate(video.uploadDate || video.date);
 
+    // FIX (this revision): tag pills below the video now navigate to
+    // the /categories/<slug> hub — same categoryHref() helper used by
+    // the home page sidebar tag cloud and the /categories page itself
+    // (see config.js) — instead of the old <button> that ran an
+    // in-page related-video search via runSearch(). Real <a> links,
+    // real navigation, consistent with how tags behave everywhere
+    // else on the site. No click-wiring needed anymore since it's a
+    // plain link, not a JS-driven button.
     const tagsEl = document.getElementById("watchTags");
     const tags = Array.isArray(video.tags) ? video.tags : [];
     tagsEl.innerHTML = tags.map((t) =>
-      `<button class="tag-pill" data-tag="${escapeHtml(t)}">${escapeHtml(t)}</button>`
+      `<a class="tag-pill" href="${categoryHref(t)}">${escapeHtml(t)}</a>`
     ).join("");
-    tagsEl.querySelectorAll(".tag-pill").forEach((btn) => {
-      btn.addEventListener("click", () => runSearch(btn.dataset.tag));
-    });
 
     document.getElementById("watchDescription").textContent = video.description || "";
   }
@@ -333,7 +338,10 @@
   document.getElementById("relatedLoadMoreBtn").addEventListener("click", renderRelatedBatch);
 
   /* In-page search: filters the related pool without leaving the page,
-     so playback of the current video is never interrupted. */
+     so playback of the current video is never interrupted. Still used
+     by the watch page's own search box (wireInPageSearch() below) —
+     tags no longer call this, they navigate to /categories/<slug>
+     instead (see renderInfo() above). */
   function runSearch(query) {
     const searchInput = document.getElementById("searchInput");
     searchInput.value = query;
