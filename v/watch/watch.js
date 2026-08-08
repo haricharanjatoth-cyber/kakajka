@@ -186,10 +186,10 @@
   }
 
   function updateHeadMeta(video) {
-    const title = `${video.title || "Watch"} — StreamHub`;
+    const title = `${video.title || "Watch"} — seVvid18`;
     document.getElementById("pageTitle").textContent = title;
     document.title = title;
-    const desc = (video.description || `Watch ${video.title || "this video"} on StreamHub.`).slice(0, 160);
+    const desc = (video.description || `Watch ${video.title || "this video"} on seVvid18.`).slice(0, 160);
     document.getElementById("pageDescription").setAttribute("content", desc);
     document.getElementById("ogTitle").setAttribute("content", title);
     document.getElementById("ogDescription").setAttribute("content", desc);
@@ -445,7 +445,7 @@
     document.getElementById("notFoundBanner").style.display = "";
     document.getElementById("watchContent").style.display = "none";
     document.querySelector(".related-section").style.display = "none";
-    document.title = "Video not found — StreamHub";
+    document.title = "Video not found — sexVid18";
   }
 
   document.addEventListener("DOMContentLoaded", init);
