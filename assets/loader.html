@@ -1,0 +1,61 @@
+<!-- Xstream loader — drop this block anywhere you need a loading state -->
+<style>
+  .xs-loader {
+    --xs-green: #53FC18;
+    --xs-dark: #0E0E10;
+    position: relative;
+    width: 72px;
+    height: 72px;
+    display: inline-block;
+  }
+  .xs-loader__ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(var(--xs-green) 0deg, transparent 300deg);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 5px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 5px));
+    animation: xs-spin 0.9s linear infinite;
+  }
+  .xs-loader__mark {
+    position: absolute;
+    inset: 14px;
+    border-radius: 22%;
+    background: var(--xs-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: xs-pulse 1.8s ease-in-out infinite;
+  }
+  .xs-loader__mark svg { width: 62%; height: 62%; display: block; }
+
+  @keyframes xs-spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes xs-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(0.92); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .xs-loader__ring { animation: none; }
+    .xs-loader__mark { animation: none; }
+  }
+
+  /* demo page styling only — not part of the component */
+  body { margin:0; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; background:#0E0E10; font-family: system-ui, sans-serif; }
+  .xs-caption { color:#8a8a8f; font-size:13px; letter-spacing:0.02em; }
+</style>
+
+<div class="xs-loader">
+  <div class="xs-loader__ring"></div>
+  <div class="xs-loader__mark">
+    <svg viewBox="0 0 128 128">
+      <line x1="34" y1="34" x2="94" y2="94" stroke="#0E0E10" stroke-width="20" stroke-linecap="round"/>
+      <line x1="94" y1="34" x2="34" y2="94" stroke="#0E0E10" stroke-width="20" stroke-linecap="round"/>
+      <circle cx="64" cy="64" r="20" fill="#0E0E10"/>
+      <path d="M 57 55 L 57 73 L 73 64 Z" fill="#53FC18"/>
+    </svg>
+  </div>
+</div>
+<div class="xs-caption">Loading…</div>

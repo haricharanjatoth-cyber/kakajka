@@ -1,0 +1,4 @@
+/models/:slug       /models/profile/      200
+/search/:query      /search/               200
+/categories/:slug   /categories/           200               
+/watch/:slug        /v/watch/        200

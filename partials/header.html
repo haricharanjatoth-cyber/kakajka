@@ -1,0 +1,108 @@
+<header class="site-header">
+  <div class="header-topbar">
+    <a href="/index.html" class="brand">
+      <img src="/assets/vid18-logo-hires-4x.png" alt="StreamHub" class="brand-logo-img"
+           style="height:44px;width:auto;display:block;flex-shrink:0;">
+    </a>
+
+    <!-- Search box: intentionally markup-only (input + wrapper div).
+         ALL search behavior — the round submit button, the "×" clear
+         button, the suggestion dropdown, exact + semantic matching —
+         is injected and wired entirely by search-ai.js at runtime,
+         and both buttons are injected AS CHILDREN of this .search-box
+         (never as a sibling/wrapper around it). Keeping them inside
+         .search-box matters: style.css's mobile rules
+         (`.header-topbar .search-box { display:none }` etc.) target
+         .search-box directly, and .search-box must stay the direct
+         child of .header-topbar for those rules — and the flex sizing
+         rules like `.header-topbar .search-box { flex:1 1 auto;
+         max-width:880px }` — to apply at all. Do NOT add a search/
+         submit <button> here, and do NOT let anything wrap this div
+         in a new parent: search-ai.js already builds its own buttons
+         inside it (.sa-btn-cluster), and this is the ONLY search
+         control on the site now — there is no separate mobile
+         search-toggle button anymore (see header-footer-init.js). -->
+    <div class="search-box">
+      <input type="search" id="searchInput" placeholder="Search videos, tags, creators…" aria-label="Search videos">
+    </div>
+
+    <div class="header-right">
+      <!-- Mobile-only: filters/nav hamburger. This used to sit next to
+           a #searchToggleBtn that toggled the search row open/closed —
+           that button has been removed. The search box above is now
+           always visible on mobile (styled as its own full-width row
+           by style.css's @media (max-width:840px) block) rather than
+           needing a tap to reveal it, so search-ai.js's search box +
+           buttons are the ONLY search UI on the page at any width.
+           hamburgerBtn opens whichever exists on the page: the
+           #sidebar filter panel (index.html-style pages) or the
+           .mobile-menu-panel nav drawer below (everything else) —
+           header-footer-init.js picks the right one at runtime. -->
+      <button class="hamburger header-icon-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+
+      <div class="auth-area" id="authWidget">
+        <button class="auth-signin-btn" id="fallbackSignInBtn">Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="header-navbar" aria-label="Primary" id="headerNavbar">
+    <a href="/index.html" data-nav="videos">Videos</a>
+    <a href="/categories" data-nav="categories">Category</a>
+    <a href="https://stripchat.app/" data-nav="live">Live</a>
+    <a href="/community.html" data-nav="community">Community</a>
+    <a href="/upload.html" data-nav="upload">Upload</a>
+  </nav>
+</header>
+
+<!-- Thin ad strip directly under the header. fillAdSlotSafe() in
+     header-footer-init.js removes the whole node on no-fill so it
+     never leaves an empty bar. -->
+<div class="banner-strip" id="bannerStrip">
+  <div class="banner-strip-inner">
+    <div class="ad-slot" id="bannerStripSlot"></div>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ===================== MOBILE SLIDE-IN NAV DRAWER =====================
+     Shared fallback for #hamburgerBtn on any page that has NO filter
+     sidebar (watch.html, model/profile pages, etc.) — pages WITH a
+     #sidebar (index.html, category listings) get the filter drawer
+     instead; header-footer-init.js decides which one to wire up based
+     on which elements exist on the page. Styling (including the
+     z-index 220/221 slot and the >840px display:none override) already
+     lives in the shared style.css — don't redefine it per page.
+     ========================================================= -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+<nav class="mobile-menu-panel" id="mobileMenuPanel" aria-label="Mobile menu" aria-hidden="true">
+  <div class="mobile-menu-header">
+    <a href="/index.html" class="brand">
+      <img src="/assets/vid18-logo-hires-4x.png" alt="StreamHub" class="brand-logo-img"
+           width="34" height="34"
+           style="width:34px;height:34px;border-radius:8px;object-fit:contain;display:block;flex-shrink:0;">
+      <span class="brand-name">Stream<span>vid</span></span>
+    </a>
+    <button type="button" class="mobile-menu-close" id="mobileMenuCloseBtn" aria-label="Close menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="mobile-menu-links">
+    <a href="/index.html" data-nav="videos">Videos</a>
+    <a href="/categories" data-nav="categories">Category</a>
+    <a href="https://stripchat.app/" data-nav="live">Live</a>
+    <a href="/community.html" data-nav="community">Community</a>
+    <a href="/upload.html" data-nav="upload">Upload</a>
+    <a href="/about.html" data-nav="about">About</a>
+  </div>
+
+  <div class="mobile-menu-footer">
+    <button class="auth-signin-btn" id="mobileMenuSignInBtn" style="width:100%;">Sign In</button>
+  </div>
+</nav>
+
+<script type="module" src="/search-ai.js"></script>

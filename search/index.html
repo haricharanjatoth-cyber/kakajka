@@ -1,0 +1,481 @@
+<!-- search/index.html page-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search — seXvid18</title>
+<meta name="description" content="Search seXvid18 for videos, tags, and creators.">
+<link rel="canonical" href="https://example.com/search/" id="canonicalLink">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Search — seXvid18">
+<meta property="og:description" content="Search seXvid18 for videos, tags, and creators.">
+<meta property="og:image" content="/assets/logo-512.png">
+<meta property="og:url" content="https://example.com/search/">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Search — seXvid18">
+<meta name="twitter:description" content="Search seXvid18 for videos, tags, and creators.">
+<meta name="twitter:image" content="/assets/logo-512.png">
+
+<link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-32.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/logo-192.png">
+<meta name="theme-color" content="#53FC18">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://reactahead.com">
+<link rel="dns-prefetch" href="https://video-api.olivia-rose-or2005.workers.dev">
+<link rel="dns-prefetch" href="https://data.bots62340.workers.dev">
+<link rel="preload" href="/style.css" as="style">
+<link rel="preload" href="/config.js" as="script">
+<link rel="preload" href="/partials/header.html" as="fetch" crossorigin>
+<link rel="preload" href="/assets/logo.svg" as="image">
+
+<script>
+(function () {
+  try {
+    if (localStorage.getItem("streamhub_theme") === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  } catch (e) { /* ignore */ }
+})();
+</script>
+
+<link rel="stylesheet" href="/style.css">
+
+<!-- ============ Xstream mini loader — small inline spinner reused
+     wherever the page shows an in-context loading state (infinite
+     scroll "loading more"). The old .brand-logo-img rule that used
+     to sit in this block is gone — logo sizing is inline on the
+     <img> inside /partials/header.html now, so it doesn't need to
+     be redefined per page. ============ -->
+<style>
+  .xs-loader {
+    --xs-green: #53FC18;
+    --xs-dark: #0E0E10;
+    position: relative;
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    vertical-align: -8px;
+  }
+  .xs-loader__ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(var(--xs-green) 0deg, transparent 300deg);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+    animation: xs-spin 0.9s linear infinite;
+  }
+  .xs-loader__mark {
+    position: absolute;
+    inset: 6px;
+    border-radius: 22%;
+    background: var(--xs-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: xs-pulse 1.8s ease-in-out infinite;
+  }
+  .xs-loader__mark svg { width: 62%; height: 62%; display: block; }
+
+  @keyframes xs-spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes xs-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(0.92); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .xs-loader__ring { animation: none; }
+    .xs-loader__mark { animation: none; }
+  }
+
+  /* ---- Search top meta: author-match card + related tags ---- */
+  .search-top-meta {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .search-author-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 360px;
+    padding: 12px 16px;
+    background: #18181b;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    text-decoration: none;
+    color: #f1f1f1;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .search-author-card:hover {
+    border-color: rgba(83,252,24,0.5);
+    background: #1e1e22;
+  }
+  .search-author-card img {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex: 0 0 auto;
+    background: #3a3a3a;
+  }
+  .sac-text { min-width: 0; }
+  .sac-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8a8a92;
+  }
+  .sac-name {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .search-tags-wrap { display: none; }
+  .search-tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+  .search-tags-toggle {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: #8a8a92;
+    font-size: 12.5px;
+    cursor: pointer;
+  }
+  .search-tags-toggle:hover { color: #f1f1f1; }
+  .search-tags-chevron { transition: transform 0.2s ease; }
+  .search-tags-wrap.collapsed .search-tags-chevron { transform: rotate(-90deg); }
+</style>
+</head>
+<body data-page="videos">
+
+<!-- Shared header (+ banner-strip ad), injected by include-partials.js.
+     This page has its own #sidebar below, so the hamburger button
+     opens THAT (filters), not the mobile nav drawer — decided at
+     runtime by header-footer-init.js's hamburgerMenu(). -->
+<div id="site-header-include"></div>
+<script src="/js/include-partials.js"></script>
+
+<!-- ===================== LAYOUT ===================== -->
+<div class="layout container">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close filters">✕</button>
+
+    <div class="sidebar-section">
+      <h3 class="sidebar-title">Browse</h3>
+      <div class="chip-group">
+        <button class="filter-btn" data-quick="recent">Recently Added</button>
+        <button class="filter-btn" data-quick="popular">Most Viewed</button>
+        <button class="filter-btn" data-quick="trending">Trending</button>
+        <button class="filter-btn" data-quick="random">Random</button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3 class="sidebar-title">Categories</h3>
+      <div id="categoryFilters" class="chip-group"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3 class="sidebar-title">Duration</h3>
+      <div class="chip-group">
+        <button class="filter-btn" data-length="short">Short (&lt;20m)</button>
+        <button class="filter-btn" data-length="long">Long (20m+)</button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3 class="sidebar-title">Sort / Upload Date</h3>
+      <select class="select-field" id="sortSelect" aria-label="Sort videos">
+        <option value="random">Random</option>
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="views">Most Viewed</option>
+        <option value="alpha">Alphabetical</option>
+      </select>
+    </div>
+
+    <div class="sidebar-section">
+      <h3 class="sidebar-title">Tags</h3>
+      <div class="tag-search-wrap">
+        <input type="search" id="tagSearchInput" class="tag-search-input"
+               placeholder="Search tags…" aria-label="Search tags">
+      </div>
+      <div class="tag-cloud" id="tagCloud"></div>
+    </div>
+
+    <div class="ad-unit sidebar-native-ad">
+      <div class="ad-label">Advertisement</div>
+      <div class="ad-slot" id="sidebarNativeAdSlot"></div>
+    </div>
+  </aside>
+
+  <!-- VIDEO GRID (search results render here — same #videoGrid script.js already fills) -->
+  <main class="content-col">
+    <div class="toolbar">
+      <h1 id="gridTitle">Search</h1>
+    </div>
+
+    <div class="search-top-meta" id="searchTopMeta">
+      <!-- populated by search-ai.js: author-match card + related tag chips -->
+    </div>
+
+    <div class="video-grid" id="videoGrid"></div>
+
+    <div class="loader-wrap" id="loaderWrap">
+      <span class="xs-loader">
+        <span class="xs-loader__ring"></span>
+        <span class="xs-loader__mark">
+          <svg viewBox="0 0 128 128">
+            <line x1="34" y1="34" x2="94" y2="94" stroke="#0E0E10" stroke-width="20" stroke-linecap="round"/>
+            <line x1="94" y1="34" x2="34" y2="94" stroke="#0E0E10" stroke-width="20" stroke-linecap="round"/>
+            <circle cx="64" cy="64" r="20" fill="#0E0E10"/>
+            <path d="M 57 55 L 57 73 L 73 64 Z" fill="#53FC18"/>
+          </svg>
+        </span>
+      </span>
+      Loading more videos…
+    </div>
+
+    <div id="scrollSentinel" style="height:1px;"></div>
+
+    <!-- "More Videos" — script.js's renderMoreVideosFallback() fills this
+         both when the search comes back empty (dead-end fallback) AND
+         when it has matches (continuation below the results), per its
+         existing isDeadEnd / isSearchWithResults logic. -->
+    <div class="more-videos-section" id="moreVideosSection" style="display:none;">
+      <h2 class="related-heading">More Videos</h2>
+      <div class="video-grid" id="moreVideosGrid"></div>
+    </div>
+
+    <section class="featured-creators-section" id="featuredCreatorsSection" aria-label="Featured creators">
+      <h2 class="related-heading">Featured Creators</h2>
+      <div class="featured-creators-grid" id="featuredCreatorsGrid">
+        <div class="featured-creator-card skeleton-card" aria-hidden="true">
+          <div class="featured-creator-avatar skeleton-shimmer"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width:60%;margin:8px auto 0;"></div>
+        </div>
+        <div class="featured-creator-card skeleton-card" aria-hidden="true">
+          <div class="featured-creator-avatar skeleton-shimmer"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width:60%;margin:8px auto 0;"></div>
+        </div>
+        <div class="featured-creator-card skeleton-card" aria-hidden="true">
+          <div class="featured-creator-avatar skeleton-shimmer"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width:60%;margin:8px auto 0;"></div>
+        </div>
+        <div class="featured-creator-card skeleton-card" aria-hidden="true">
+          <div class="featured-creator-avatar skeleton-shimmer"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width:60%;margin:8px auto 0;"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- RIGHT AD COLUMN -->
+  <aside class="ad-column" id="adColumn">
+    <div class="ad-unit"><div class="ad-label">Advertisement</div><div class="ad-slot" id="adSlot1">Advertisement</div></div>
+    <div class="ad-unit"><div class="ad-label">Advertisement</div><div class="ad-slot" id="adSlot3">Advertisement</div></div>
+  </aside>
+
+</div>
+
+<!-- Shared footer, injected by include-partials.js -->
+<div id="site-footer-include"></div>
+
+<script src="/config.js"></script>
+<script type="module" src="/search-ai.js"></script>
+<script src="/countries.js"></script>
+
+<!-- Header/footer behavior (scroll-hide, hamburger -> sidebar since
+     #sidebar exists on this page, sign-in fallback, back-to-top,
+     banner-strip ad). Waits for "partials:loaded". -->
+<script src="/js/header-footer-init.js" defer></script>
+
+<!-- This page's OWN ad slots (right column + sidebar native) — not
+     part of the header/footer partials, so header-footer-init.js
+     doesn't touch these; filled here same as before. -->
+<script>
+(function () {
+  var runWhenIdle = window.requestIdleCallback || function (cb) { setTimeout(cb, 1); };
+  runWhenIdle(function () {
+  var slots = [
+    ["adSlot1", "banner160x300"],
+    ["adSlot3", "banner160x600"],
+    ["sidebarNativeAdSlot", "nativeBanner"]
+  ];
+  slots.forEach(function (pair) {
+    var id = pair[0], key = pair[1];
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (typeof fillAdSlot !== "function") {
+      el.textContent = "Error: config.js not loaded (fillAdSlot missing)";
+      el.style.color = "#ff6b6b";
+      console.error("[ads] fillAdSlot is not defined — check config.js is returning 200, not 404, in DevTools > Network.");
+      return;
+    }
+    if (typeof AD_CODES === "undefined" || !AD_CODES[key] || !AD_CODES[key].trim()) {
+      el.textContent = 'Error: no AD_CODES entry for "' + key + '"';
+      el.style.color = "#ff6b6b";
+      console.error('[ads] AD_CODES["' + key + '"] is empty in config.js.');
+      return;
+    }
+    var ok = fillAdSlot(el, key);
+    if (!ok) {
+      el.textContent = 'Error: fillAdSlot() failed for "' + key + '"';
+      el.style.color = "#ff6b6b";
+    }
+  });
+  if (typeof injectPageLevelAds === "function") injectPageLevelAds();
+  });
+})();
+</script>
+
+<script src="/script.js"></script>
+
+<script type="module" src="/firebase-config.js"></script>
+<script type="module" src="/auth.js"></script>
+
+<!-- Featured creators — page-specific content, not header/footer,
+     so it stays here rather than moving into header-footer-init.js. -->
+<script>
+(function () {
+  var FEATURED_COUNT = 4;
+  var CANDIDATE_CAP = 24;
+  var gridEl = null;
+  var renderToken = 0;
+
+  function imageExists(url) {
+    return new Promise(function (resolve) {
+      if (!url) { resolve(false); return; }
+      var img = new Image();
+      img.onload = function () { resolve(true); };
+      img.onerror = function () { resolve(false); };
+      img.src = url;
+    });
+  }
+
+  function creatorCardHtml(pick) {
+    var name = escapeHtml(pick.name || "Creator");
+    var href = authorHref({ name: pick.name });
+    var avatarUrl = pick.avatarUrl || PLACEHOLDER_AVATAR;
+    return (
+      '<a class="featured-creator-card" href="' + href + '">' +
+        '<img class="featured-creator-avatar" src="' + escapeHtml(avatarUrl) + '" alt="' + name + '" ' +
+             'loading="lazy" width="88" height="88" ' +
+             'onerror="this.onerror=null;this.src=\'' + PLACEHOLDER_AVATAR + '\';">' +
+        '<span class="featured-creator-name">' + name + '</span>' +
+      '</a>'
+    );
+  }
+
+  async function pickFeaturedAuthors(count) {
+    var videos = await fetchAllVideos();
+    var seen = new Set();
+    var names = [];
+    videos.forEach(function (v) {
+      var key = normalizeName(v.author);
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      names.push(v.author);
+    });
+    names = shuffleArray(names);
+
+    var candidates = names.slice(0, Math.min(CANDIDATE_CAP, names.length));
+    var checked = await Promise.all(candidates.map(function (name) {
+      var url = authorImageUrl(name);
+      return imageExists(url).then(function (ok) {
+        return { name: name, avatarUrl: url, ok: ok };
+      });
+    }));
+
+    var picks = checked.filter(function (r) { return r.ok; }).slice(0, count);
+
+    if (picks.length < count) {
+      var usedKeys = new Set(picks.map(function (p) { return normalizeName(p.name); }));
+      for (var i = 0; i < names.length && picks.length < count; i++) {
+        var key = normalizeName(names[i]);
+        if (usedKeys.has(key)) continue;
+        usedKeys.add(key);
+        picks.push({ name: names[i], avatarUrl: PLACEHOLDER_AVATAR });
+      }
+    }
+    return picks;
+  }
+
+  async function renderFeaturedCreators() {
+    if (!gridEl) return;
+    var myToken = ++renderToken;
+    try {
+      var picks = await pickFeaturedAuthors(FEATURED_COUNT);
+      if (myToken !== renderToken) return;
+      if (!picks.length) {
+        gridEl.innerHTML = "";
+        return;
+      }
+      gridEl.innerHTML = picks.map(creatorCardHtml).join("");
+    } catch (err) {
+      console.error("[featured-creators] failed to load authors:", err);
+      if (myToken === renderToken) gridEl.innerHTML = "";
+    }
+  }
+
+  function init() {
+    gridEl = document.getElementById("featuredCreatorsGrid");
+    if (!gridEl) return;
+
+    renderFeaturedCreators();
+
+    var authWidget = document.getElementById("authWidget");
+    if (authWidget && "MutationObserver" in window) {
+      var lastHtml = authWidget.innerHTML;
+      var mo = new MutationObserver(function () {
+        if (authWidget.innerHTML === lastHtml) return;
+        lastHtml = authWidget.innerHTML;
+        renderFeaturedCreators();
+      });
+      mo.observe(authWidget, { childList: true, subtree: true });
+    }
+
+    window.addEventListener("streamhub:authchange", renderFeaturedCreators);
+  }
+
+  // authWidget doesn't exist until the header partial loads, so wait
+  // for that instead of DOMContentLoaded.
+  document.addEventListener("partials:loaded", init);
+})();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/sw.js").catch(function (err) {
+      console.warn("[sw] registration failed (site still works without it):", err);
+    });
+  });
+}
+</script>
+</body>
+</html>

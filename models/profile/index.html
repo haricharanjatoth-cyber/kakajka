@@ -1,0 +1,556 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Profile — seXvid18</title>
+<meta name="description" id="pageDescription" content="View this creator's videos on seXvid18.">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/png" href="/assets/logo-32.png">
+<script>
+(function () {
+  try {
+    if (localStorage.getItem("streamhub_theme") === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  } catch (e) { /* ignore */ }
+})();
+</script>
+
+<!-- Page-scoped styles for the avatar frame + tags UI + mobile menu.
+     Kept here rather than in the shared style.css since these
+     classes (profile-avatar-wrap, ptags-*, mobile-menu-*) are only
+     used starting on this page — move mobile-menu-* into style.css
+     once you roll the drawer out to index.html/watch.html too, so
+     it isn't duplicated per-page. -->
+<style>
+  /* -------- Avatar: circle always reserves its space -------- */
+  .profile-avatar-wrap {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #17171a 0%, #232326 100%);
+    border: 2px solid #2c2c30;
+  }
+  .profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* -------- Tags: unified box, 3-row cap by default -------- */
+  .ptags-box {
+    background: #16161a;
+    border: 1px solid #26262b;
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .ptags-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .ptags-filter-btn,
+  .ptags-minimize-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #d4d4d9;
+    background: #1d1d21;
+    border: 1px solid #2c2c30;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .ptags-filter-btn:hover,
+  .ptags-filter-btn.open,
+  .ptags-minimize-btn:hover {
+    background: rgba(83, 252, 24, 0.1);
+    border-color: #53FC18;
+    color: #53FC18;
+  }
+  .ptags-minimize-chevron {
+    transition: transform 0.2s ease;
+  }
+  .ptags-minimize-btn.is-minimized .ptags-minimize-chevron {
+    transform: rotate(180deg);
+  }
+
+  .ptags-filter-row { margin-bottom: 10px; }
+  .ptags-filter-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: #0e0e10;
+    border: 1px solid #2c2c30;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #f2f2f4;
+    font-size: 13px;
+    outline: none;
+  }
+  .ptags-filter-input:focus { border-color: #53FC18; }
+
+  /* Flex-wrapped tag pills, height-capped so exactly 3 rows show by
+     default regardless of how many tags per row the container width
+     allows. --row-h is a safe estimate of one pill's rendered height
+     (font + padding + border) so the cap holds without measuring the
+     DOM. Filtering removes the cap entirely so matches are never
+     hidden behind it; minimizing overrides down to 1 row. */
+  .ptags-wrap {
+    --row-h: 30px;
+    --row-gap: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--row-gap);
+    overflow: hidden;
+    max-height: calc(var(--row-h) * 3 + var(--row-gap) * 2);
+    transition: max-height 0.25s ease;
+  }
+  .ptags-wrap.ptags-minimized {
+    max-height: var(--row-h);
+  }
+  .ptags-wrap.ptags-unclamped {
+    max-height: none;
+  }
+
+  .ptag-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #1d1d21;
+    border: 1px solid #2c2c30;
+    color: #d4d4d9;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .ptag-pill:hover { background: #24242a; border-color: #3a3a40; }
+  .ptag-pill.active {
+    background: #53FC18;
+    border-color: #53FC18;
+    color: #0e0e10;
+    font-weight: 700;
+  }
+  .ptag-pill[hidden] { display: none; }
+
+  .ptags-empty {
+    color: #6b6b72;
+    font-size: 13px;
+    padding: 4px 0;
+  }
+
+  .brand-logo-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 22%;
+    display: block;
+  }
+
+  /* =========================================================
+     MOBILE SLIDE-IN MENU — triggered by .hamburger, mirrors
+     xHamster's off-canvas nav drawer. Fully inert above 840px:
+     the overlay/panel never render or intercept clicks on desktop.
+     ========================================================= */
+  .mobile-menu-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 400;
+    opacity: 0;
+    transition: opacity 0.2s var(--ease);
+  }
+  .mobile-menu-overlay.show { display: block; opacity: 1; }
+
+  .mobile-menu-panel {
+    display: none;
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 300px; max-width: 85vw;
+    background: var(--bg-elevated);
+    border-left: 1px solid var(--border);
+    z-index: 401;
+    transform: translateX(100%);
+    transition: transform 0.25s var(--ease);
+    flex-direction: column;
+    overflow-y: auto;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .mobile-menu-panel.show { display: flex; transform: translateX(0); }
+
+  .mobile-menu-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px; border-bottom: 1px solid var(--border);
+  }
+  .mobile-menu-close {
+    background: var(--bg-elevated-2); border: 1px solid var(--border); color: var(--text);
+    width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .mobile-menu-close:hover { border-color: var(--accent); color: var(--accent); }
+
+  .mobile-menu-links { display: flex; flex-direction: column; padding: 8px 0; }
+  .mobile-menu-links a {
+    padding: 14px 20px;
+    font-size: 15px; font-weight: 600; color: var(--text);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s var(--ease), color 0.15s var(--ease);
+  }
+  .mobile-menu-links a:hover,
+  .mobile-menu-links a:active { background: var(--bg-elevated-2); color: var(--accent); }
+  .mobile-menu-links a.active { color: var(--accent); }
+
+  .mobile-menu-footer { margin-top: auto; padding: 16px 20px; border-top: 1px solid var(--border); }
+
+  /* Only ever reachable on the mobile tier, matching .hamburger's own
+     breakpoint so the trigger and the panel appear/disappear together. */
+  @media (min-width: 841px) {
+    .mobile-menu-overlay, .mobile-menu-panel { display: none !important; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu-panel, .mobile-menu-overlay { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER =====================
+     Rebuilt to match style.css's .header-topbar / .header-navbar
+     structure (fixed + auto-hide via .is-hidden, see header-scroll.js
+     below). The previous .header-inner / .main-nav markup had no
+     matching CSS rules, so this header was unstyled before.
+
+     Hamburger is now live: visible on mobile (CSS already handles
+     display:none/flex per breakpoint), opens the slide-in drawer
+     below instead of sitting inert with visibility:hidden. -->
+<header class="site-header">
+  <div class="header-topbar">
+    <a href="/index.html" class="brand">
+      <img src="/assets/vid18-logo-hires-4x.png" alt="StreamHub" class="brand-logo-img"
+           style="height:44px;width:auto;display:block;flex-shrink:0;">
+    </a>
+
+
+    <div class="search-box">
+      <input type="search" id="searchInput" placeholder="Search videos, tags, creators…" aria-label="Search videos">
+    </div>
+
+    <div class="header-right">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenuPanel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+
+      <div class="auth-area" id="authWidget">
+        <button class="auth-signin-btn" id="fallbackSignInBtn">Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="header-navbar" aria-label="Primary">
+    <a href="../index.html">Videos</a>
+    <a href="../categories">Category</a>
+    <a href="https://stripchat.app/">Live</a>
+    <a href="../community.html">Community</a>
+  </nav>
+</header>
+
+<!-- ===================== MOBILE SLIDE-IN MENU =====================
+     Hidden entirely above 840px (see CSS above); only the hamburger
+     button in the header triggers it on mobile. Same nav links as
+     .header-navbar, just laid out as a full-height drawer instead of
+     a horizontal-scroll strip. -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+<nav class="mobile-menu-panel" id="mobileMenuPanel" aria-label="Mobile menu" aria-hidden="true">
+  <div class="mobile-menu-header">
+    <a href="/index.html" class="brand">
+      <img src="/assets/vid18-logo-hires-4x.png" alt="StreamHub" class="brand-logo-img"
+           style="height:44px;width:auto;display:block;flex-shrink:0;">
+    </a>
+
+    <button type="button" class="mobile-menu-close" id="mobileMenuCloseBtn" aria-label="Close menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="mobile-menu-links">
+    <a href="../index.html">Videos</a>
+    <a href="../categories">Category</a>
+    <a href="https://stripchat.app/">Live</a>
+    <a href="#">Community</a>
+    <a href="#">Upload</a>
+  </div>
+
+  <div class="mobile-menu-footer">
+    <button class="auth-signin-btn" id="mobileMenuSignInBtn" style="width:100%;">Sign In</button>
+  </div>
+</nav>
+
+<!-- Auto-hide header controller — deferred so it reliably runs after
+     the header markup above exists in the DOM. -->
+<script src="../header-scroll.js" defer></script>
+
+<!-- ===================== LAYOUT =====================
+     Same .watch-layout grid watch.html uses (1fr / 180px, ad column
+     drops out below 1100px) — kept consistent site-wide instead of a
+     one-off layout for this page. -->
+<div class="watch-layout container">
+
+  <main class="watch-main">
+
+    <div id="notFoundBanner" class="not-found-banner" style="display:none;">
+      Sorry, we couldn't find that creator.
+      <a href="../index.html">Browse all videos →</a>
+    </div>
+
+    <div id="profileContent" style="display:none;">
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <!-- The circular frame always renders and reserves its space.
+             profile.js only ever puts a src on the <img> inside it if
+             a real avatar URL exists (models.profile_link, or the
+             authors-iu6.pages.dev fallback) — otherwise the frame
+             just stays as an empty dark circle. -->
+        <div class="profile-avatar-wrap" id="profileAvatarWrap">
+          <img class="profile-avatar" id="profileAvatar" src="" alt="" style="display:none;">
+        </div>
+        <div>
+          <h1 class="profile-name" id="profileName"></h1>
+          <div class="profile-country-row" id="profileCountryRow" style="display:none;">
+            <img id="profileCountryFlag" class="profile-country-flag" alt="">
+            <span id="profileCountryName" class="profile-country-name"></span>
+          </div>
+          <div class="profile-video-count" id="profileVideoCount"></div>
+        </div>
+      </div>
+
+      <!-- Tags Row - unified box with minimize + filter, built by
+           profile.js's renderTagsRow(). -->
+      <div class="profile-tags-row" id="profileTagsRow"></div>
+    </div>
+
+    <div id="profileVideoSections" style="display:none;">
+      <!-- Videos Section -->
+      <h2 class="related-heading">Videos</h2>
+      <div class="video-grid" id="authorVideoGrid"></div>
+      <div class="loader-wrap" id="authorLoaderWrap" style="display:none;">
+        <button class="load-more-btn" id="authorLoadMoreBtn">Load More</button>
+      </div>
+
+      <!-- More Videos Section -->
+      <div class="more-videos-section">
+        <h2 class="related-heading">More Videos</h2>
+        <div class="video-grid" id="moreVideosGrid"></div>
+        <div class="loader-wrap" id="moreLoaderWrap" style="display:none;">
+          <button class="load-more-btn" id="moreLoadMoreBtn">Load More</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT AD COLUMN — identical slots/sizes to watch.html
+       (160x300 + 160x600), same consistent 180px rail used
+       everywhere else on the site. -->
+  <aside class="ad-column" id="adColumn">
+    <div class="ad-unit"><div class="ad-label">Advertisement</div><div class="ad-slot" id="adSlot1">Advertisement</div></div>
+    <div class="ad-unit"><div class="ad-label">Advertisement</div><div class="ad-slot" id="adSlot3">Advertisement</div></div>
+  </aside>
+
+</div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+        <a href="/index.html" class="brand">
+      <img src="/assets/vid18-logo-hires-4x.png" alt="StreamHub" class="brand-logo-img"
+           style="height:44px;width:auto;display:block;flex-shrink:0;">
+    </a>
+
+        <p class="footer-tagline">
+          A fast, modern video streaming platform for discovering trending, recent,
+          and popular videos across every category.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="../index.html">Videos</a>
+        <a href="../categories">Category</a>
+        <a href="#">Live</a>
+        <a href="#">Community</a>
+        <a href="#">Upload</a>
+        <a href="#">About</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Help</h4>
+        <a href="../help/faq.html">FAQ</a>
+        <a href="../help/content-removal.html">Content Removal</a>
+        <a href="#">Contact</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Info</h4>
+        <a href="../info/terms.html">Terms of Service</a>
+        <a href="../info/privacy-policy.html">Privacy Policy</a>
+        <a href="../info/cookie-policy.html">Cookie Policy</a>
+        <a href="../info/dmca.html">DMCA</a>
+        <a href="../info/trust-safety.html">Trust &amp; Safety</a>
+        <a href="../info/parental-controls.html">Parental Controls</a>
+        <a href="../info/report.html">Report Content</a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 StreamHub. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+<button type="button" class="back-to-top" id="backToTopBtn" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<!-- 1. config.js — defines AD_CODES, fillAdSlot(), videoGridBatchHtml
+        helpers (adCardHtml, pickRowAdKey), authorImageUrl(),
+        wireLazyAdCards(), etc. -->
+<script src="../config.js"></script>
+
+<script src="../countries.js"></script>
+
+<!-- 2. Fill the 2 side ad slots + 1 inline ad slot, deferred to idle
+        time — exact same block as watch.html, just pointed at this
+        page's slot IDs. -->
+<script>
+(function () {
+  var runWhenIdle = window.requestIdleCallback || function (cb) { setTimeout(cb, 1); };
+  runWhenIdle(function () {
+  var slots = [
+    ["adSlot1", "banner160x300"],
+    ["adSlot3", "banner160x600"]
+  ];
+  slots.forEach(function (pair) {
+    var id = pair[0], key = pair[1];
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (typeof fillAdSlot !== "function") {
+      el.textContent = "Error: config.js not loaded (fillAdSlot missing)";
+      el.style.color = "#ff6b6b";
+      console.error("[ads] fillAdSlot is not defined — check ../config.js is returning 200, not 404, in DevTools > Network.");
+      return;
+    }
+    if (typeof AD_CODES === "undefined" || !AD_CODES[key] || !AD_CODES[key].trim()) {
+      el.textContent = 'Error: no AD_CODES entry for "' + key + '"';
+      el.style.color = "#ff6b6b";
+      console.error('[ads] AD_CODES["' + key + '"] is empty in config.js.');
+      return;
+    }
+    var ok = fillAdSlot(el, key);
+    if (!ok) {
+      el.textContent = 'Error: fillAdSlot() failed for "' + key + '"';
+      el.style.color = "#ff6b6b";
+    }
+  });
+  if (typeof injectPageLevelAds === "function") injectPageLevelAds();
+  if (typeof renderMobileAdBar === "function") renderMobileAdBar();
+  });
+})();
+</script>
+
+<!-- 3. Profile page logic. renderChunk() now uses a card-ad + row-ad
+        cadence inside both video grids, same building blocks
+        (adCardHtml/pickRowAdKey/wireLazyAdCards from config.js) that
+        watch.js's related-grid cadence uses. -->
+<script src="/models/profile/profile.js"></script>
+
+<script type="module" src="../firebase-config.js"></script>
+<script type="module" src="../auth.js"></script>
+<script type="module" src="/search-ai.js"></script>
+<script>
+(function () {
+  var btn = document.getElementById("fallbackSignInBtn");
+  if (!btn) return;
+  btn.addEventListener("click", function () {
+    if (window.StreamHubAuth && typeof window.StreamHubAuth.openModal === "function") {
+      window.StreamHubAuth.openModal("signin");
+    } else {
+      alert("Sign-in isn't ready yet. Check the console.");
+    }
+  });
+})();
+</script>
+
+<!-- 4. Mobile slide-in menu — opens/closes the drawer above, reuses
+        the same sign-in modal trigger as the header's desktop
+        button so both entry points land on the same auth flow. -->
+<script>
+(function () {
+  var hamburgerBtn = document.getElementById("hamburgerBtn");
+  var overlay = document.getElementById("mobileMenuOverlay");
+  var panel = document.getElementById("mobileMenuPanel");
+  var closeBtn = document.getElementById("mobileMenuCloseBtn");
+  var signInBtn = document.getElementById("mobileMenuSignInBtn");
+  if (!hamburgerBtn || !overlay || !panel) return;
+
+  function openMenu() {
+    overlay.classList.add("show");
+    panel.classList.add("show");
+    panel.setAttribute("aria-hidden", "false");
+    hamburgerBtn.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden"; // lock page scroll behind the drawer
+  }
+  function closeMenu() {
+    overlay.classList.remove("show");
+    panel.classList.remove("show");
+    panel.setAttribute("aria-hidden", "true");
+    hamburgerBtn.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  }
+
+  hamburgerBtn.addEventListener("click", openMenu);
+  closeBtn.addEventListener("click", closeMenu);
+  overlay.addEventListener("click", closeMenu);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && panel.classList.contains("show")) closeMenu();
+  });
+
+  // Close the drawer whenever a nav link inside it is tapped
+  panel.querySelectorAll(".mobile-menu-links a").forEach(function (a) {
+    a.addEventListener("click", closeMenu);
+  });
+
+  // Reuse the same sign-in modal trigger the desktop button uses
+  if (signInBtn) {
+    signInBtn.addEventListener("click", function () {
+      closeMenu();
+      if (window.StreamHubAuth && typeof window.StreamHubAuth.openModal === "function") {
+        window.StreamHubAuth.openModal("signin");
+      } else {
+        var fallback = document.getElementById("fallbackSignInBtn");
+        if (fallback) fallback.click();
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>

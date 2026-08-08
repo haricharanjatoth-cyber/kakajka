@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Report Content / Contact Us — seXvid18</title>
+<link rel="icon" type="image/png" href="/assets/logo-32.png">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .doc-layout { max-width: 760px; margin: 0 auto; padding: 32px 20px 60px; }
+  .doc-card {
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow);
+  }
+  .doc-card h1 { font-size: 24px; margin: 0 0 4px; }
+  .doc-updated { color: var(--text-muted); font-size: 13px; margin: 0 0 20px; }
+  .doc-card p { color: var(--text); font-size: 14px; line-height: 1.7; }
+  .doc-note {
+    background: var(--accent-soft); border-left: 3px solid var(--accent);
+    padding: 12px 16px; border-radius: 6px; font-size: 13px; color: var(--text-muted); margin: 16px 0 24px;
+  }
+  .doc-note a { color: var(--accent); font-weight: 600; }
+
+  .field-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .field-row label { font-size: 13px; font-weight: 600; color: var(--text); }
+  .field-row .hint { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+  .field-row input, .field-row select, .field-row textarea {
+    padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg-elevated-2); color: var(--text); font-size: 14px; font-family: inherit;
+  }
+  .field-row input:focus, .field-row select:focus, .field-row textarea:focus {
+    outline: none; border-color: var(--accent);
+  }
+  .field-row textarea { resize: vertical; min-height: 100px; }
+  .required { color: var(--danger); }
+
+  .category-desc {
+    display: none; font-size: 12px; color: var(--text-muted);
+    background: var(--bg-elevated-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; margin-top: 4px;
+  }
+  .category-desc.show { display: block; }
+
+  .checkbox-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 16px; }
+  .checkbox-row input { margin-top: 3px; }
+  .checkbox-row label { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+  .form-actions { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+  .status-msg { font-size: 13px; }
+  .status-msg.ok { color: var(--success); }
+  .status-msg.err { color: var(--danger); }
+</style>
+</head>
+<body data-page="none">
+
+<!-- Shared header, injected by include-partials.js -->
+<div id="site-header-include"></div>
+<script src="/js/include-partials.js"></script>
+
+<main class="container doc-layout">
+  <div class="doc-card">
+    <h1>Report Content / Contact Us</h1>
+    <p class="doc-updated">Single point of contact for legal notices and content reports</p>
+
+    <p>Use this form to notify [Your Company Name] of content on StreamHub
+    that you believe is illegal or violates our
+    <a href="/info/terms.html" style="color:var(--accent);">Terms of Service</a>.
+    This form is also the single point of contact for copyright (DMCA)
+    notices, privacy requests, and other legal correspondence.</p>
+
+    <div class="doc-note">
+      Selecting the correct category below helps us route your report to
+      the right team and respond faster. If your report concerns copyrighted
+      material, please choose the DMCA category so it can be handled under
+      our <a href="/info/dmca.html">DMCA Notice &amp; Takedown Policy</a>.
+    </div>
+
+    <form id="reportForm">
+      <div class="field-row">
+        <label for="subject">Subject <span class="required">*</span></label>
+        <span class="hint">A brief summary of your report (e.g. "Unauthorized use of my copyrighted video").</span>
+        <input type="text" id="subject" name="subject" required>
+      </div>
+
+      <div class="field-row">
+        <label for="category">Category <span class="required">*</span></label>
+        <span class="hint">Select the option that best matches your report.</span>
+        <select id="category" name="category" required>
+          <option value="" disabled selected>Select a category…</option>
+          <option value="dmca">Copyright Infringement / DMCA Notice and Takedown</option>
+          <option value="non_consensual">Non-Consensual Content / Right of Publicity Violation</option>
+          <option value="minor">Content Involving a Minor</option>
+          <option value="privacy">Data Protection / Privacy Request (Access, Deletion, CCPA, etc.)</option>
+          <option value="trademark">Trademark Infringement</option>
+          <option value="defamation">Defamation / False Statement of Fact</option>
+          <option value="terms_violation">Other Violation of Our Terms &amp; Conditions</option>
+          <option value="account">Account or Billing Support</option>
+          <option value="general">General Inquiry</option>
+        </select>
+
+        <div class="category-desc" data-for="dmca">You believe copyrighted material was used on StreamHub without authorization. You'll need to confirm the required DMCA statements below.</div>
+        <div class="category-desc" data-for="non_consensual">You (or someone you represent) appear in content posted without consent.</div>
+        <div class="category-desc" data-for="minor">You believe content depicts, or was created using, a person under 18. Reports in this category are treated as highest priority.</div>
+        <div class="category-desc" data-for="privacy">You want to access, correct, or delete personal data we hold about you, or opt out of data sharing.</div>
+        <div class="category-desc" data-for="trademark">You believe a trademark you own is being used in a way that infringes your rights.</div>
+        <div class="category-desc" data-for="defamation">You believe content contains a false statement of fact about you or your organization.</div>
+        <div class="category-desc" data-for="terms_violation">Content violates our Terms &amp; Conditions for a reason not covered above.</div>
+        <div class="category-desc" data-for="account">Questions about your account, subscription, or billing.</div>
+        <div class="category-desc" data-for="general">Any other question not covered by the categories above.</div>
+      </div>
+
+      <div class="field-row">
+        <label for="contentUrl">URL(s) of the content in question</label>
+        <span class="hint">One per line. Include the full page URL(s), not just the site name.</span>
+        <textarea id="contentUrl" name="contentUrl"></textarea>
+      </div>
+
+      <div class="field-row">
+        <label for="description">Description <span class="required">*</span></label>
+        <span class="hint">Describe your report in as much detail as possible.</span>
+        <textarea id="description" name="description" required></textarea>
+      </div>
+
+      <div class="field-row">
+        <label for="fullName">Full Name <span class="required">*</span></label>
+        <input type="text" id="fullName" name="fullName" required>
+      </div>
+
+      <div class="field-row">
+        <label for="email">Email Address <span class="required">*</span></label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="field-row">
+        <label for="address">Mailing Address</label>
+        <span class="hint">Required for DMCA notices and counter-notices.</span>
+        <input type="text" id="address" name="address">
+      </div>
+
+      <div class="field-row">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone">
+      </div>
+
+      <div id="dmcaAttestations" style="display:none;">
+        <div class="checkbox-row">
+          <input type="checkbox" id="dmcaGoodFaith" name="dmcaGoodFaith">
+          <label for="dmcaGoodFaith">I have a good-faith belief that the use of the material described above is not authorized by the copyright owner, its agent, or the law.</label>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="dmcaPerjury" name="dmcaPerjury">
+          <label for="dmcaPerjury">Under penalty of perjury, I affirm that the information in this notice is accurate and that I am the copyright owner, or am authorized to act on the copyright owner's behalf.</label>
+        </div>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="signatureConfirm" name="signatureConfirm" required>
+        <label for="signatureConfirm">Typing my name below constitutes my electronic signature on this report. <span class="required">*</span></label>
+      </div>
+
+      <div class="field-row">
+        <label for="signature">Electronic Signature <span class="required">*</span></label>
+        <input type="text" id="signature" name="signature" placeholder="Type your full legal name" required>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="auth-signin-btn">Submit Report</button>
+        <span class="status-msg" id="formStatus"></span>
+      </div>
+    </form>
+  </div>
+</main>
+
+<!-- Shared footer, injected by include-partials.js -->
+<div id="site-footer-include"></div>
+
+<script src="/js/header-footer-init.js" defer></script>
+
+<script>
+  // Show/hide category description + DMCA-specific attestation checkboxes
+  const categorySelect = document.getElementById('category');
+  const descBlocks = document.querySelectorAll('.category-desc');
+  const dmcaBlock = document.getElementById('dmcaAttestations');
+
+  categorySelect.addEventListener('change', () => {
+    const val = categorySelect.value;
+    descBlocks.forEach(el => el.classList.toggle('show', el.dataset.for === val));
+    dmcaBlock.style.display = (val === 'dmca') ? 'block' : 'none';
+  });
+
+  // Placeholder submit handler — wire this up to your actual backend
+  // (e.g. a Cloudflare Worker endpoint) before going live.
+  document.getElementById('reportForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const status = document.getElementById('formStatus');
+    status.textContent = 'This form is not yet connected to a backend — wire up your submit handler here.';
+    status.className = 'status-msg err';
+  });
+</script>
+
+</body>
+</html>

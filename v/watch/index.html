@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Loading video… — seXvid18</title>
+<meta name="description" id="pageDescription" content="Watch thousands of free HD adult videos, XXX movies, and clips. Browse by categories, tags, and creators with fast streaming and daily updates.">
+<link rel="canonical" href="https://example.com/watch/" id="canonicalLink">
+
+<meta property="og:type" content="video.other">
+<meta property="og:title" id="ogTitle" content="seXvid18">
+<meta property="og:description" id="ogDescription" content="Watch thousands of free HD adult videos, XXX movies, and clips. Browse by categories, tags, and creators with fast streaming and daily updates.">
+<meta property="og:image" id="ogImage" content="/assets/logo-512.png">
+<meta property="og:url" id="ogUrl" content="https://example.com/watch/">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" id="twitterTitle" content="">
+<meta name="twitter:description" id="twitterDescription" content="Watch thousands of free HD adult videos, XXX movies, and clips. Browse by categories, tags, and creators with fast streaming and daily updates.">
+<meta name="twitter:image" id="twitterImage" content="/assets/logo-512.png">
+
+<link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-32.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/logo-192.png">
+<meta name="theme-color" content="#53FC18">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://reactahead.com">
+<link rel="dns-prefetch" href="https://video-api.olivia-rose-or2005.workers.dev">
+<link rel="dns-prefetch" href="https://data.bots62340.workers.dev">
+<link rel="preload" href="/style.css" as="style">
+<link rel="preload" href="/config.js" as="script">
+<link rel="preload" href="/partials/header.html" as="fetch" crossorigin>
+
+<script>
+(function () {
+  try {
+    if (localStorage.getItem("streamhub_theme") === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  } catch (e) { /* ignore */ }
+})();
+</script>
+
+<link rel="stylesheet" href="/style.css">
+
+<!-- Xstream mini loader — same small spinner used elsewhere, reused
+     here for the player's loading state while the direct video URL /
+     views are resolved. (The old .brand-logo-img rule that used to
+     live in this block is gone — the header/footer partials size
+     their own logo inline now, see /partials/header.html, so it no
+     longer needs to exist per-page.) -->
+<style>
+  .xs-loader {
+    --xs-green: #53FC18;
+    --xs-dark: #0E0E10;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    vertical-align: -12px;
+  }
+  .xs-loader__ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(var(--xs-green) 0deg, transparent 300deg);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
+    animation: xs-spin 0.9s linear infinite;
+  }
+  .xs-loader__mark {
+    position: absolute;
+    inset: 8px;
+    border-radius: 22%;
+    background: var(--xs-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: xs-pulse 1.8s ease-in-out infinite;
+  }
+  .xs-loader__mark svg { width: 62%; height: 62%; display: block; }
+
+  @keyframes xs-spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes xs-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(0.92); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .xs-loader__ring { animation: none; }
+    .xs-loader__mark { animation: none; }
+  }
+
+  .xs-caption { color:#8a8a8f; font-size:13px; letter-spacing:0.02em; }
+
+  .player-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+    min-height: 240px;
+  }
+</style>
+</head>
+<body data-page="videos">
+
+<!-- Shared header, injected by include-partials.js -->
+<div id="site-header-include"></div>
+<script src="/js/include-partials.js"></script>
+
+<!-- ===================== WATCH LAYOUT ===================== -->
+<div class="watch-layout container">
+
+  <!-- MAIN COLUMN: player + info + related -->
+  <main class="watch-main">
+
+    <div id="notFoundBanner" class="not-found-banner" style="display:none;">
+      Sorry, we couldn't find that video. It may have been removed, or the link is incorrect.
+      <a href="/index.html">Browse all videos →</a>
+    </div>
+
+    <div id="watchContent" style="display:none;">
+      <div class="player-wrap" id="playerWrap">
+        <div class="player-loading" id="playerLoading">
+          <span class="xs-loader">
+            <span class="xs-loader__ring"></span>
+            <span class="xs-loader__mark">
+              <svg viewBox="0 0 128 128">
+                <line x1="34" y1="34" x2="94" y2="94" stroke="#0E0E10" stroke-width="20" stroke-linecap="round"/>
+                <line x1="94" y1="34" x2="34" y2="94" stroke="#0E0E10" stroke-width="20" stroke-linecap="round"/>
+                <circle cx="64" cy="64" r="20" fill="#0E0E10"/>
+                <path d="M 57 55 L 57 73 L 73 64 Z" fill="#53FC18"/>
+              </svg>
+            </span>
+          </span>
+          <span class="xs-caption">Loading player…</span>
+        </div>
+      </div>
+
+      <h1 class="watch-title" id="watchTitle"></h1>
+
+      <div class="watch-meta">
+        <a href="#" class="watch-author" id="watchAuthorLink" style="display:none;"></a>
+        <span class="watch-date" id="watchDate"></span>
+        <span class="watch-views" id="watchViews" style="margin-left:auto; display:none;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px; margin-right:4px;"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg><span id="watchViewsCount"></span>
+        </span>
+        <button class="btn-secondary" id="likeBtn">♡ Like</button>
+      </div>
+
+      <div class="watch-tags" id="watchTags"></div>
+
+      <p class="watch-description" id="watchDescription"></p>
+    </div>
+
+    <!-- In-page ad, below the player/description, above related. This
+         is page-specific content (not part of the header/footer), so
+         it's still filled by the script block below, not by
+         header-footer-init.js. -->
+    <div class="ad-unit inline-ad">
+      <div class="ad-label">Advertisement</div>
+      <div class="ad-slot" id="adSlotInline">Advertisement</div>
+    </div>
+
+    <div class="related-section">
+      <h2 class="related-heading">Related Videos</h2>
+      <div class="video-grid" id="relatedGrid"></div>
+      <div class="loader-wrap" id="relatedLoaderWrap" style="display:none;">
+        <button class="load-more-btn" id="relatedLoadMoreBtn">Load More</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT AD COLUMN (page-specific, not header/footer) -->
+  <aside class="ad-column" id="adColumn">
+    <div class="ad-unit"><div class="ad-label">Advertisement</div><div class="ad-slot" id="adSlot1">Advertisement</div></div>
+    <div class="ad-unit"><div class="ad-label">Advertisement</div><div class="ad-slot" id="adSlot3">Advertisement</div></div>
+  </aside>
+
+</div>
+
+<!-- Shared footer, injected by include-partials.js -->
+<div id="site-footer-include"></div>
+
+<!-- 1. config.js — defines fetchAllVideos(), videoHref(), currentVideoSlugFromUrl(), AD_CODES, etc. -->
+<script src="/config.js"></script>
+
+<!-- 1b. countries.js — only actually used by the sign-up modal, but auth.js
+        looks for initCountrySearch() on every page it runs on. -->
+<script src="/countries.js"></script>
+
+<!-- 2. Header/footer behavior (scroll-hide, hamburger, sign-in fallback,
+        back-to-top, banner-strip ad) — waits for "partials:loaded". -->
+<script src="/js/header-footer-init.js" defer></script>
+
+<!-- 3. Fill this page's OWN ad slots (right column + inline) — these
+        aren't part of the header/footer partials so header-footer-init.js
+        doesn't touch them. Deferred to idle time so ad iframes never
+        compete with the player/related grid for bandwidth. -->
+<script>
+(function () {
+  var runWhenIdle = window.requestIdleCallback || function (cb) { setTimeout(cb, 1); };
+  runWhenIdle(function () {
+  var slots = [
+    ["adSlot1", "banner160x300"],
+    ["adSlot3", "banner160x600"],
+    ["adSlotInline", "banner728x90"]
+  ];
+  slots.forEach(function (pair) {
+    var id = pair[0], key = pair[1];
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (typeof fillAdSlot !== "function") {
+      el.textContent = "Error: config.js not loaded (fillAdSlot missing)";
+      el.style.color = "#ff6b6b";
+      console.error("[ads] fillAdSlot is not defined — check config.js is returning 200, not 404, in DevTools > Network.");
+      return;
+    }
+    if (typeof AD_CODES === "undefined" || !AD_CODES[key] || !AD_CODES[key].trim()) {
+      el.textContent = 'Error: no AD_CODES entry for "' + key + '"';
+      el.style.color = "#ff6b6b";
+      console.error('[ads] AD_CODES["' + key + '"] is empty in config.js.');
+      return;
+    }
+    var ok = fillAdSlot(el, key);
+    if (!ok) {
+      el.textContent = 'Error: fillAdSlot() failed for "' + key + '"';
+      el.style.color = "#ff6b6b";
+    }
+  });
+  if (typeof injectPageLevelAds === "function") injectPageLevelAds();
+  });
+})();
+</script>
+
+<!-- 4. Watch-page logic: finds the video matching the /watch/<slug>
+        path, renders player, title, tags, author, related videos +
+        in-page search.
+
+     FIX (this revision): the physical files for this template now
+     live in a NESTED folder — v/watch/index.html (this file) and
+     v/watch/watch.js — because the /_redirects rule rewrites the
+     clean /watch/:slug URL to the DIRECTORY /v/watch/, and Cloudflare
+     Pages serves that directory's index.html automatically:
+
+         /watch/:slug   /v/watch/   200
+
+     The previous src here was "/v/watch.js" — a leftover from when
+     this template was a single flat file at /v/watch.html. That path
+     no longer exists on disk (this file itself proves it: it's at
+     v/watch/index.html now, one folder deeper), so the browser was
+     requesting a file that was never there. Root-absolute is still
+     correct and still required (a relative "watch.js" would resolve
+     against the fake /watch/<slug> address-bar path, not this file's
+     real location) — it just needs to point at the CURRENT real
+     location: /v/watch/watch.js. -->
+<script src="/v/watch/watch.js"></script>
+
+<!-- 5/6. Firebase + auth. account.js also loaded here (not just on
+        account.html) purely to expose window.StreamHubLibrary
+        (like/history helpers) — see watch.js. -->
+<script type="module" src="/firebase-config.js"></script>
+<script type="module" src="/auth.js"></script>
+<script type="module" src="/account.js"></script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/sw.js").catch(function (err) {
+      console.warn("[sw] registration failed (site still works without it):", err);
+    });
+  });
+}
+</script>
+</body>
+</html>

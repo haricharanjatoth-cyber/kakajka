@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content Removal — seXvid18</title>
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" type="image/png" href="/assets/logo-32.png">
+<style>
+  .doc-layout { max-width: 760px; margin: 0 auto; padding: 32px 20px 60px; }
+  .doc-card {
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow);
+  }
+  .doc-card h1 { font-size: 24px; margin: 0 0 4px; }
+  .doc-updated { color: var(--text-muted); font-size: 13px; margin: 0 0 24px; }
+  .doc-card h2 {
+    font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--accent); margin: 28px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
+  }
+  .doc-card h3 { font-size: 14px; margin: 18px 0 8px; color: var(--text); }
+  .doc-card p, .doc-card li { color: var(--text); font-size: 14px; line-height: 1.7; }
+  .doc-card ol, .doc-card ul { padding-left: 1.3em; }
+  .doc-note {
+    background: var(--accent-soft); border-left: 3px solid var(--accent);
+    padding: 12px 16px; border-radius: 6px; font-size: 13px; color: var(--text-muted); margin: 16px 0;
+  }
+  .doc-note a { color: var(--accent); font-weight: 600; }
+
+  .path-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0 8px; }
+  @media (max-width: 600px) { .path-cards { grid-template-columns: 1fr; } }
+  .path-card {
+    background: var(--bg-elevated-2); border: 1px solid var(--border); border-radius: 10px; padding: 16px;
+  }
+  .path-card h3 { margin-top: 0; }
+  .path-card p { font-size: 13px; }
+
+  .field-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .field-row label { font-size: 13px; font-weight: 600; color: var(--text); }
+  .field-row .hint { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+  .field-row input, .field-row select, .field-row textarea {
+    padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg-elevated-2); color: var(--text); font-size: 14px; font-family: inherit;
+  }
+  .field-row input:focus, .field-row select:focus, .field-row textarea:focus {
+    outline: none; border-color: var(--accent);
+  }
+  .field-row textarea { resize: vertical; min-height: 100px; }
+  .required { color: var(--danger); }
+
+  .requestor-desc {
+    display: none; font-size: 12px; color: var(--text-muted);
+    background: var(--bg-elevated-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; margin-top: 4px;
+  }
+  .requestor-desc.show { display: block; }
+
+  .checkbox-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 16px; }
+  .checkbox-row input { margin-top: 3px; }
+  .checkbox-row label { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+  .form-actions { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+  .status-msg { font-size: 13px; }
+  .status-msg.ok { color: var(--success); }
+  .status-msg.err { color: var(--danger); }
+</style>
+</head>
+<body data-page="none">
+
+<!-- Shared header, injected by include-partials.js -->
+<div id="site-header-include"></div>
+<script src="/js/include-partials.js"></script>
+
+<main class="container doc-layout">
+  <div class="doc-card">
+    <h1>Content Removal</h1>
+    <p class="doc-updated">Last updated: [Month Day, Year]</p>
+
+    <p>This page explains how to remove content from StreamHub, whether
+    you're the account holder who uploaded it or someone who appears in it
+    and did not consent to its posting.</p>
+
+    <div class="path-cards">
+      <div class="path-card">
+        <h3>I uploaded this content</h3>
+        <p>Sign in and delete it directly from your account dashboard — no
+        request needed. Removal is typically immediate. If you can't access
+        your account, use the form below and select "Account Holder /
+        Uploader."</p>
+      </div>
+      <div class="path-card">
+        <h3>I appear in this content</h3>
+        <p>If content depicting you was posted without your consent, or you
+        withdrew consent after it was posted, use the form below. These
+        requests are reviewed on a priority basis.</p>
+      </div>
+    </div>
+
+    <h2>1. Who Can Request Removal</h2>
+    <ul>
+      <li>The account holder who uploaded the content;</li>
+      <li>A person who appears in the content and did not consent, or has
+      since withdrawn consent;</li>
+      <li>A parent or legal guardian acting on behalf of a minor;</li>
+      <li>A copyright owner &mdash; use our
+      <a href="/info/dmca.html" style="color:var(--accent);">DMCA Notice &amp; Takedown Policy</a>
+      instead, since copyright claims follow a separate legal process.</li>
+    </ul>
+
+    <h2>2. What Happens After You Submit a Request</h2>
+    <ol>
+      <li>We confirm receipt of your request;</li>
+      <li>Our moderation team reviews the content and your request,
+      typically within seven (7) business days;</li>
+      <li>If the request is valid, we remove or disable access to the
+      content and notify the uploader, where applicable;</li>
+      <li>If we need more information to process your request, we'll
+      contact you at the email address you provide;</li>
+      <li>If you disagree with our decision on a consent-based removal
+      request, you may appeal; see Section 4 below.</li>
+    </ol>
+
+    <h2>3. Identity Verification</h2>
+    <p>To protect against fraudulent removal requests, we may ask you to
+    verify your identity or your connection to the content before we act on
+    a request &mdash; for example, by confirming details only the depicted
+    person or account holder would know. This does not apply to copyright
+    (DMCA) requests, which follow the verification process described in our
+    DMCA policy.</p>
+
+    <h2>4. Appeals</h2>
+    <p>If you disagree with a decision we made on a consent-based removal
+    request, you may appeal. Disputes that cannot be resolved directly may
+    be submitted to a neutral, third-party arbitration process at our
+    expense. Contact us using the form below to start an appeal.</p>
+
+    <div class="doc-note">
+      If this involves content you believe depicts a minor, please use our
+      <a href="/info/report.html">Report Content form</a> and select "Content
+      Involving a Minor" instead of the form below &mdash; those reports are
+      routed for immediate review.
+    </div>
+
+    <h2>5. Submit a Removal Request</h2>
+
+    <form id="removalForm">
+      <div class="field-row">
+        <label for="requestorType">I am the… <span class="required">*</span></label>
+        <select id="requestorType" name="requestorType" required>
+          <option value="" disabled selected>Select an option…</option>
+          <option value="uploader">Account Holder / Uploader</option>
+          <option value="depicted">Person Depicted in the Content</option>
+          <option value="guardian">Parent or Legal Guardian of a Minor</option>
+          <option value="other">Other / Authorized Representative</option>
+        </select>
+
+        <div class="requestor-desc" data-for="uploader">If you can sign in, it's faster to delete this content yourself from your account dashboard.</div>
+        <div class="requestor-desc" data-for="depicted">We'll ask you to verify your connection to the content before removal.</div>
+        <div class="requestor-desc" data-for="guardian">Please describe your relationship to the minor and how you can be reached.</div>
+        <div class="requestor-desc" data-for="other">Please explain your relationship to the content or the person depicted.</div>
+      </div>
+
+      <div class="field-row">
+        <label for="contentUrl">URL(s) of the content <span class="required">*</span></label>
+        <span class="hint">One per line. Include the full page URL(s).</span>
+        <textarea id="contentUrl" name="contentUrl" required></textarea>
+      </div>
+
+      <div class="field-row">
+        <label for="reason">Reason for removal <span class="required">*</span></label>
+        <textarea id="reason" name="reason" required></textarea>
+      </div>
+
+      <div class="field-row">
+        <label for="fullName">Full Name <span class="required">*</span></label>
+        <input type="text" id="fullName" name="fullName" required>
+      </div>
+
+      <div class="field-row">
+        <label for="email">Email Address <span class="required">*</span></label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="field-row">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone">
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="goodFaith" name="goodFaith" required>
+        <label for="goodFaith">I have a good-faith belief that the statements made in this request are accurate. <span class="required">*</span></label>
+      </div>
+
+      <div class="field-row">
+        <label for="signature">Electronic Signature <span class="required">*</span></label>
+        <input type="text" id="signature" name="signature" placeholder="Type your full legal name" required>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="auth-signin-btn">Submit Removal Request</button>
+        <span class="status-msg" id="formStatus"></span>
+      </div>
+    </form>
+  </div>
+</main>
+
+<!-- Shared footer, injected by include-partials.js -->
+<div id="site-footer-include"></div>
+
+<script src="/js/header-footer-init.js" defer></script>
+
+<script>
+  const requestorSelect = document.getElementById('requestorType');
+  const descBlocks = document.querySelectorAll('.requestor-desc');
+
+  requestorSelect.addEventListener('change', () => {
+    const val = requestorSelect.value;
+    descBlocks.forEach(el => el.classList.toggle('show', el.dataset.for === val));
+  });
+
+  // Placeholder submit handler — wire this up to your actual backend
+  // (e.g. a Cloudflare Worker endpoint) before going live.
+  document.getElementById('removalForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const status = document.getElementById('formStatus');
+    status.textContent = 'This form is not yet connected to a backend — wire up your submit handler here.';
+    status.className = 'status-msg err';
+  });
+</script>
+
+</body>
+</html>

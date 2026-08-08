@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Account — StreamHub</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="style.css">
+<script>
+(function () {
+  try {
+    if (localStorage.getItem("streamhub_theme") === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  } catch (e) { /* ignore */ }
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-logo">S</div>
+      <span class="brand-name">Stream<span>Hub</span></span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html">Videos</a>
+      <a href="#">Category</a>
+      <a href="#">Live</a>
+      <a href="#">Community</a>
+      <a href="#">Upload</a>
+      <a href="#">About</a>
+    </nav>
+    <div class="auth-area" id="authWidget" style="margin-left:auto;">
+      <button class="auth-signin-btn" id="fallbackSignInBtn">Sign In</button>
+    </div>
+  </div>
+</header>
+
+<div class="account-layout">
+
+  <div id="signedOutPrompt" style="display:none; text-align:center; padding:60px 0;">
+    <p>You need to sign in to view your account.</p>
+    <button class="load-more-btn" id="signInPromptBtn">Sign In</button>
+  </div>
+
+  <div id="accountBody" style="display:none;">
+
+    <div class="account-card">
+      <h2>Profile</h2>
+      <div class="account-avatar-row">
+        <div class="account-avatar-lg" id="acctAvatar"></div>
+        <div>
+          <input type="file" id="avatarFileInput" accept="image/jpeg,image/png,image/webp" style="display:none;">
+          <button class="btn-secondary" id="changeAvatarBtn">Change photo</button>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">JPEG/PNG/WEBP, auto-resized under 200KB.</div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <label for="acctUsername">Username</label>
+        <input type="text" id="acctUsername" maxlength="30">
+      </div>
+      <div class="field-row">
+        <label for="acctEmail">Email</label>
+        <input type="email" id="acctEmail" disabled>
+      </div>
+      <div class="field-row">
+        <label for="acctCity">City</label>
+        <input type="text" id="acctCity">
+      </div>
+      <div class="country-search-wrap">
+        <div class="field-row">
+          <label for="acctCountry">Country</label>
+          <input type="text" id="acctCountry" autocomplete="off">
+        </div>
+        <div class="country-search-dropdown" id="acctCountryDropdown"></div>
+      </div>
+      <div class="field-row">
+        <label for="acctPhone">Phone</label>
+        <input type="tel" id="acctPhone" placeholder="+1 555 123 4567">
+      </div>
+      <div class="field-row">
+        <label for="acctGender">Gender</label>
+        <select id="acctGender">
+          <option value="">Prefer not to say</option>
+          <option value="Female">Female</option>
+          <option value="Male">Male</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="account-actions">
+        <button class="load-more-btn" id="saveProfileBtn">Save changes</button>
+      </div>
+      <div class="status-msg" id="profileStatusMsg"></div>
+    </div>
+
+    <div class="account-card">
+      <h2>Preferences</h2>
+      <div class="theme-toggle-row">
+        <div>
+          <div style="font-weight:600; font-size:14px;">Light theme</div>
+          <div style="font-size:12px; color:var(--text-muted);">Applies instantly across the whole site on this browser.</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="themeToggle">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="account-card">
+      <h2>Liked Videos</h2>
+      <div class="video-grid" id="likedVideosGrid"></div>
+      <div id="likedEmptyMsg" style="color:var(--text-muted); font-size:13px;">No liked videos yet — tap the like button on any video.</div>
+      <div style="font-size:11px; color:var(--text-muted); margin-top:10px;">Stored on this browser only — likes won't follow you to another device yet.</div>
+    </div>
+
+    <div class="account-card">
+      <h2>Watch History</h2>
+      <div class="video-grid" id="historyGrid"></div>
+      <div id="historyEmptyMsg" style="color:var(--text-muted); font-size:13px;">Videos you watch will show up here.</div>
+      <div class="account-actions">
+        <button class="btn-secondary" id="clearHistoryBtn">Clear history</button>
+      </div>
+    </div>
+
+    <div class="account-card">
+      <h2>Danger Zone</h2>
+      <button class="btn-secondary" style="color:var(--danger); border-color:var(--danger);" id="signOutBtn2">Sign Out</button>
+    </div>
+
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>&copy; 2026 StreamHub. All rights reserved.</p>
+</footer>
+
+<script src="config.js"></script>
+<script type="module" src="search-ai.js"></script>
+<script src="countries.js"></script>
+<script type="module" src="firebase-config.js"></script>
+<script type="module" src="auth.js"></script>
+<script type="module" src="account.js"></script>
+<script>
+(function () {
+  var btn = document.getElementById("fallbackSignInBtn");
+  if (btn) btn.addEventListener("click", function () {
+    if (window.StreamHubAuth) window.StreamHubAuth.openModal("signin");
+  });
+})();
+</script>
+</body>
+</html>

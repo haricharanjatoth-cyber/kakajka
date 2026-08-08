@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAQ — seXvid18</title>
+<link rel="icon" type="image/png" href="/assets/logo-32.png">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .doc-layout { max-width: 820px; margin: 0 auto; padding: 32px 20px 60px; }
+  .doc-card {
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow);
+  }
+  .doc-card h1 { font-size: 24px; margin: 0 0 4px; }
+  .doc-updated { color: var(--text-muted); font-size: 13px; margin: 0 0 24px; }
+  .doc-card h2 {
+    font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--accent); margin: 32px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
+  }
+  .doc-card h2:first-of-type { margin-top: 8px; }
+  .doc-card p, .doc-card li { color: var(--text); font-size: 14px; line-height: 1.7; }
+  .doc-card ol, .doc-card ul { padding-left: 1.3em; }
+  .doc-note {
+    background: var(--accent-soft); border-left: 3px solid var(--accent);
+    padding: 12px 16px; border-radius: 6px; font-size: 13px; color: var(--text-muted); margin: 16px 0;
+  }
+  .doc-note a { color: var(--accent); font-weight: 600; }
+
+  .faq-item {
+    border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 10px; background: var(--bg-elevated-2); overflow: hidden;
+  }
+  .faq-item summary {
+    list-style: none; cursor: pointer; padding: 14px 18px;
+    font-size: 14px; font-weight: 600; color: var(--text);
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '+'; color: var(--accent); font-size: 18px; font-weight: 400; flex-shrink: 0;
+  }
+  .faq-item[open] summary::after { content: '\2212'; }
+  .faq-item .faq-answer {
+    padding: 0 18px 16px; font-size: 13.5px; color: var(--text-muted); line-height: 1.7;
+  }
+  .faq-answer a { color: var(--accent); }
+  .faq-answer ul, .faq-answer ol { padding-left: 1.2em; margin: 8px 0; }
+
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+  .toc a {
+    font-size: 12.5px; color: var(--text-muted); text-decoration: none;
+    border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px;
+  }
+  .toc a:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body data-page="none">
+
+<!-- Shared header, injected by include-partials.js -->
+<div id="site-header-include"></div>
+<script src="/js/include-partials.js"></script>
+
+<main class="container doc-layout">
+  <div class="doc-card">
+    <h1>Frequently Asked Questions</h1>
+    <p class="doc-updated">Last updated: [Month Day, Year]</p>
+
+    <div class="toc">
+      <a href="#abuses">Abuses</a>
+      <a href="#basic">Basic Questions</a>
+      <a href="#technical">Technical Questions</a>
+      <a href="#uploads">Uploads</a>
+    </div>
+
+    <div class="doc-note">
+      Looking to remove content you appear in, or report copyrighted or
+      illegal material? Use our
+      <a href="/help/content-removal.html">Content Removal</a> page or
+      <a href="/info/report.html">Report Content</a> form — those requests
+      are routed to our moderation team directly and aren't handled through
+      this FAQ.
+    </div>
+
+    <h2 id="abuses">Abuses</h2>
+
+    <details class="faq-item">
+      <summary>Someone sent me spam via comments/private messages.</summary>
+      <div class="faq-answer">
+        <p>You can report the specific comment or message using the "Report"
+        option next to it, and you can block the sender so they can't
+        contact you again (see "How can I block a user" below). Repeated
+        or automated spam should be reported through the
+        <a href="/info/report.html">Report Content form</a> so our team
+        can take action against the account.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>I see my copyrighted content on StreamHub, how can it be removed?</summary>
+      <div class="faq-answer">
+        <p>Copyright claims are handled separately from general content
+        removal requests. Please submit a notice through our
+        <a href="/info/dmca.html">DMCA Notice &amp; Takedown Policy</a>,
+        which explains what information is required and how the process
+        works.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>I see a video with me uploaded on StreamHub, how can it be removed?</summary>
+      <div class="faq-answer">
+        <p>If you appear in content that was posted without your consent, or
+        you've withdrawn consent since it was posted, submit a request
+        through our <a href="/help/content-removal.html">Content Removal</a> page.
+        We may ask you to verify your identity or your connection to the
+        content before we act on the request, and these requests are
+        reviewed on a priority basis.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>I see illegal content on StreamHub, how can it be removed?</summary>
+      <div class="faq-answer">
+        <p>Please report it immediately through our
+        <a href="/info/report.html">Report Content form</a>, selecting the
+        category that best matches what you saw (for example, content
+        involving a minor is routed for immediate review). Do not describe
+        the content in detail beyond what the form asks for — flagging the
+        URL and category is enough for our moderation team to investigate.</p>
+      </div>
+    </details>
+
+    <h2 id="basic">Basic Questions</h2>
+
+    <details class="faq-item">
+      <summary>Does StreamHub have an app and how do I install it?</summary>
+      <div class="faq-answer">
+        <p>StreamHub is accessible through any modern mobile or desktop
+        browser, and the site is optimized to work well on phones and
+        tablets without a separate app install. Check the
+        <a href="/about.html">About</a> page for the current status of any native app
+        offerings.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I check comments and what does the Comment counter on my Profile page indicate?</summary>
+      <div class="faq-answer">
+        <p>Comments you've posted and comments left on your content can be
+        viewed from your profile dashboard. The counter next to "Comments"
+        on your profile reflects the total number of comments you've made
+        across the site.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I recover my password?</summary>
+      <div class="faq-answer">
+        <p>Use the "Forgot password?" link on the sign-in screen and enter
+        the email address associated with your account. You'll receive a
+        link to reset your password; if you no longer have access to that
+        email, contact support for further verification steps.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>I have an exciting idea for StreamHub.com, how can I share it with you?</summary>
+      <div class="faq-answer">
+        <p>We welcome feedback and suggestions. You can reach out through
+        the Contact link in the footer, and our team reviews submissions
+        for potential product improvements.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Is StreamHub FREE?</summary>
+      <div class="faq-answer">
+        <p>Core browsing and viewing features are free to use. Some
+        optional features (such as premium accounts, ad-free viewing, or
+        creator subscriptions, where offered) may involve a fee — these are
+        always clearly labeled before you're asked to pay anything.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>What are Favorites?</summary>
+      <div class="faq-answer">
+        <p>Favorites let you bookmark videos or photos so you can find them
+        again quickly from your profile, without having to search for them
+        each time.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>What does it mean when a user's icon says "retired"?</summary>
+      <div class="faq-answer">
+        <p>A "retired" label means the account holder has marked themselves
+        as no longer active on the platform. Their existing content and
+        profile may still be visible, depending on their settings, but they
+        are no longer posting new content.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How is comment rank calculated?</summary>
+      <div class="faq-answer">
+        <p>Comment rank is generally based on a combination of how many
+        comments you've posted and how the community has responded to them
+        (for example, upvotes). Ranks are meant to reflect consistent,
+        positive participation rather than volume alone.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Can I download videos?</summary>
+      <div class="faq-answer">
+        <p>Download availability depends on the individual uploader's
+        settings and any applicable licensing — not all content is
+        downloadable. Where a download option exists, you'll see a download
+        button on the video's page.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>A video from my favorites has been deleted. Why?</summary>
+      <div class="faq-answer">
+        <p>This usually means the uploader removed it, or it was taken down
+        following a copyright claim, a content-removal request, or a
+        violation of our content policies.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I block a user from sending me messages and commenting?</summary>
+      <div class="faq-answer">
+        <p>Visit the user's profile and select "Block" (usually found in the
+        profile's options menu). Once blocked, that user won't be able to
+        message you, comment on your content, or otherwise interact with
+        your account.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I unblock a user?</summary>
+      <div class="faq-answer">
+        <p>Go to your account's privacy or blocked-users settings, find the
+        user in your blocked list, and select "Unblock."</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>What is the maximum number of friends allowed?</summary>
+      <div class="faq-answer">
+        <p>Friend limits, if any, are shown in your account settings under
+        the Community or Friends section, since these limits can vary by
+        account type.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I deactivate/delete my account?</summary>
+      <div class="faq-answer">
+        <p>You can deactivate or permanently delete your account from your
+        account settings page, under "Account" or "Privacy." Deactivating
+        hides your profile temporarily and can typically be reversed by
+        signing back in; deleting is permanent and removes your profile and
+        associated data after any required retention period.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How to get featured on the StreamHub Creators page with a live stream?</summary>
+      <div class="faq-answer">
+        <p>Featured placement is generally based on factors like stream
+        quality, audience engagement, and adherence to our content
+        guidelines. Creators interested in being considered can check the
+        Creator or Community section of the site for current program
+        details and eligibility requirements.</p>
+      </div>
+    </details>
+
+    <h2 id="technical">Technical Questions</h2>
+
+    <details class="faq-item">
+      <summary>I can't leave comments to videos/photos/blogs/etc. What's wrong?</summary>
+      <div class="faq-answer">
+        <p>This can happen if you're not signed in, if the content owner has
+        disabled comments, if your account has a temporary comment
+        restriction (see "Spam sanctions" below), or if there's a temporary
+        technical issue. Try signing out and back in, or check your account
+        status page for any active restrictions.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Spam sanctions</summary>
+      <div class="faq-answer">
+        <p>Accounts that repeatedly post spam, unsolicited links, or
+        low-quality automated comments may have their commenting privileges
+        temporarily or permanently restricted. If you believe a sanction was
+        applied in error, you can appeal through our Contact page.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I watch videos?</summary>
+      <div class="faq-answer">
+        <p>Browse or search for content from the homepage and select a
+        video to open its player page. Some content may require you to be
+        signed in or to confirm your age before playback begins.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I watch StreamHub on my mobile device?</summary>
+      <div class="faq-answer">
+        <p>StreamHub's site is mobile-responsive, so you can visit it
+        directly from your phone or tablet's browser without installing
+        anything extra.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>The video keeps buffering while I'm watching. What's wrong?</summary>
+      <div class="faq-answer">
+        <p>Buffering is usually related to your internet connection speed
+        or local network congestion. Try lowering the video quality/resolution
+        setting in the player, closing other bandwidth-heavy applications,
+        or switching to a more stable connection.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>I can't log in. What's wrong?</summary>
+      <div class="faq-answer">
+        <p>Double-check your email and password, make sure Caps Lock isn't
+        on, and confirm cookies are enabled (see below). If you've forgotten
+        your password, use the password recovery link. If your account has
+        been suspended, you'll usually see a message explaining why when you
+        attempt to sign in.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How do I enable cookies?</summary>
+      <div class="faq-answer">
+        <p>Cookie settings are managed in your browser, not on StreamHub
+        directly. Look in your browser's privacy or site-settings menu for
+        an option like "Allow cookies" or "Block third-party cookies," and
+        make sure this site isn't listed as blocked.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>I have no sound. How can I fix it?</summary>
+      <div class="faq-answer">
+        <p>Check that the video player itself isn't muted (look for a
+        speaker icon on the player), and confirm your device's system
+        volume is turned up and not muted. If sound works elsewhere on your
+        device but not on StreamHub, try refreshing the page or a different
+        browser.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I add an image into the ABOUT ME section of my profile?</summary>
+      <div class="faq-answer">
+        <p>Go to your profile edit page, locate the "About Me" field, and
+        use the image/upload option in that field's toolbar to insert a
+        photo.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I delete a video from my favorites?</summary>
+      <div class="faq-answer">
+        <p>Open your Favorites list from your profile, find the video, and
+        select the remove/unfavorite icon (often a filled heart or star that
+        toggles off) next to it.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I delete a picture from my favorites?</summary>
+      <div class="faq-answer">
+        <p>The process is the same as removing a video: open your Favorites
+        list, find the picture, and select the remove/unfavorite icon next
+        to it.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I add avatars?</summary>
+      <div class="faq-answer">
+        <p>Go to your profile settings and select "Change avatar" or the
+        avatar image itself, then upload a photo from your device. Check
+        "What are the rules for my profile avatar" below for image
+        requirements.</p>
+      </div>
+    </details>
+
+    <h2 id="uploads">Uploads</h2>
+
+    <details class="faq-item">
+      <summary>What are the rules for my profile avatar and creator landing page?</summary>
+      <div class="faq-answer">
+        <p>Avatars and creator landing pages must follow the same content
+        guidelines as any other upload — no content involving minors, no
+        content posted without consent, and no material that violates our
+        Terms of Service. Avatars are typically limited to a specific image
+        size and file type; check the upload form for current specs.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How can I upload photos to StreamHub?</summary>
+      <div class="faq-answer">
+        <p>Sign in, select "Upload" from the main navigation, choose the
+        photo upload option, and follow the prompts to add titles, tags, and
+        category information before publishing.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>I would like to prove that I am a real person, and get the community user stamp in my profile, but don't want to show my face.</summary>
+      <div class="faq-answer">
+        <p>Verification is meant to confirm you're a genuine, authorized
+        account holder — it isn't the same as publishing a photo of
+        yourself publicly. Check your account's verification settings for
+        the specific options available; many platforms handle identity
+        verification through a private review process rather than requiring
+        a public-facing photo. If you have questions about what a specific
+        verification step requires, contact support directly before
+        proceeding.</p>
+      </div>
+    </details>
+
+  </div>
+</main>
+
+<!-- Shared footer, injected by include-partials.js -->
+<div id="site-footer-include"></div>
+
+<script src="/js/header-footer-init.js" defer></script>
+
+</body>
+</html>

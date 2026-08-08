@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>seXvid18 — Watch, Discover, Enjoy</title>
+<meta name="description" content="Watch thousands of free HD adult videos, XXX movies, and clips. Browse by categories, tags, and creators with fast streaming and daily updates.">
+<link rel="canonical" href="https://example.com/index.html">
+<meta name="google-site-verification" content="ho4EKU0cyrBcj6Tm3bAbnSUdab6QIope7iG0XDlQ2zA" />
+<meta property="og:type" content="website">
+<meta property="og:title" content="Watch thousands of free HD adult videos, XXX movies, and clips. Browse by categories, tags, and creators with fast streaming and daily updates.">
+<meta property="og:description" content="Watch thousands of free HD adult videos, XXX movies, and clips. Browse by categories, tags, and creators with fast streaming and daily updates.">
+<meta property="og:image" content="/assets/logo-512.png">
+<meta property="og:url" content="https://example.com/index.html">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="seXvid18 — Watch thousands of free HD adult videos, XXX movies, and clips. Browse by categories, tags, and creators with fast streaming and daily updates.">
+<meta name="twitter:description" content="Watch thousands of free HD adult videos, XXX movies, and clips. Browse by categories, tags, and creators with fast streaming and daily updates.">
+<meta name="twitter:image" content="/assets/logo-512.png">
+
+<link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-32.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/logo-192.png">
+<meta name="theme-color" content="#53FC18">
+<link rel="icon" type="image/png" href="/assets/logo-32.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preload" href="/style.css" as="style">
+<link rel="preload" href="/config.js" as="script">
+<link rel="preload" href="/partials/header.html" as="fetch" crossorigin>
+<link rel="preload" href="/assets/logo.svg" as="image">
+
+<script>
+(function () {
+  try {
+    if (localStorage.getItem("streamhub_theme") === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  } catch (e) { /* ignore */ }
+})();
+</script>
+
+<link rel="stylesheet" href="/style.css">
+</head>
+<body data-page="videos">
+
+<!-- Shared header, injected by include-partials.js.
+     header.html itself carries <script type="module" src="/search-ai.js">
+     at its own tail, revived by include-partials.js's reviveScripts()
+     once the header is spliced in — that's the ONE place search-ai.js
+     is declared now, so every page that includes this header partial
+     gets search for free without needing its own separate <script>
+     tag for it (previously duplicated here too; removed — see the
+     page scripts block near the bottom of <body>). -->
+<div id="site-header-include"></div>
+<script src="/js/include-partials.js"></script>
+
+<!-- ===================== LAYOUT (page-specific content) ===================== -->
+<div class="layout container">
+
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close filters">✕</button>
+
+    <div class="sidebar-section">
+      <h3 class="sidebar-title">Browse</h3>
+      <div class="chip-group">
+        <button class="filter-btn" data-quick="recent">Recently Added</button>
+        <button class="filter-btn" data-quick="popular">Most Viewed</button>
+        <button class="filter-btn" data-quick="trending">Trending</button>
+        <button class="filter-btn" data-quick="random">Random</button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3 class="sidebar-title">Categories</h3>
+      <div id="categoryFilters" class="chip-group"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3 class="sidebar-title">Duration</h3>
+      <div class="chip-group">
+        <button class="filter-btn" data-length="short">Short (&lt;20m)</button>
+        <button class="filter-btn" data-length="long">Long (20m+)</button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3 class="sidebar-title">Sort / Upload Date</h3>
+      <select class="select-field" id="sortSelect" aria-label="Sort videos">
+        <option value="random">Random</option>
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="views">Most Viewed</option>
+        <option value="alpha">Alphabetical</option>
+      </select>
+    </div>
+
+    <div class="sidebar-section">
+      <h3 class="sidebar-title">Tags</h3>
+      <div class="tag-search-wrap">
+        <input type="search" id="tagSearchInput" class="tag-search-input"
+               placeholder="Search tags…" aria-label="Search tags">
+      </div>
+      <div class="tag-cloud" id="tagCloud"></div>
+    </div>
+
+    <div class="ad-unit sidebar-native-ad" id="sidebarNativeAdUnit">
+      <div class="ad-label">Advertisement</div>
+      <div class="ad-slot" id="sidebarNativeAdSlot"></div>
+    </div>
+  </aside>
+
+  <main class="content-col">
+    <div class="toolbar">
+      <h1 id="gridTitle">All Videos</h1>
+    </div>
+    <div class="video-grid" id="videoGrid"></div>
+    <div class="loader-wrap" id="loaderWrap">Loading more videos…</div>
+    <div id="scrollSentinel" style="height:1px;"></div>
+
+    <div class="more-videos-section" id="moreVideosSection" style="display:none;">
+      <h2 class="related-heading">More Videos</h2>
+      <div class="video-grid" id="moreVideosGrid"></div>
+    </div>
+
+    <section class="featured-creators-section" id="featuredCreatorsSection" aria-label="Featured creators">
+      <h2 class="related-heading">Featured Creators</h2>
+      <div class="featured-creators-grid" id="featuredCreatorsGrid">
+        <div class="featured-creator-card skeleton-card" aria-hidden="true">
+          <div class="featured-creator-avatar skeleton-shimmer"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width:60%;margin:8px auto 0;"></div>
+        </div>
+        <div class="featured-creator-card skeleton-card" aria-hidden="true">
+          <div class="featured-creator-avatar skeleton-shimmer"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width:60%;margin:8px auto 0;"></div>
+        </div>
+        <div class="featured-creator-card skeleton-card" aria-hidden="true">
+          <div class="featured-creator-avatar skeleton-shimmer"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width:60%;margin:8px auto 0;"></div>
+        </div>
+        <div class="featured-creator-card skeleton-card" aria-hidden="true">
+          <div class="featured-creator-avatar skeleton-shimmer"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width:60%;margin:8px auto 0;"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="ad-column" id="adColumn">
+    <div class="ad-unit" id="adUnit1"><div class="ad-label">Advertisement</div><div class="ad-slot" id="adSlot1"></div></div>
+    <div class="ad-unit" id="adUnit3"><div class="ad-label">Advertisement</div><div class="ad-slot" id="adSlot3"></div></div>
+  </aside>
+
+</div>
+
+<!-- Shared footer, injected by include-partials.js -->
+<div id="site-footer-include"></div>
+
+<!-- Page scripts. header-footer-init.js listens for "partials:loaded"
+     so it's safe to load anywhere after include-partials.js.
+
+     NOTE: search-ai.js is intentionally NOT declared here anymore.
+     It used to be double-declared — once here, once inside
+     header.html — which, while harmless (ES module scripts are
+     deduplicated per resolved URL, so it only ever executed once),
+     meant search only "worked" on pages that happened to also carry
+     this direct tag. Any page relying solely on the header partial
+     would have been fine too (header.html's own copy covers it),
+     but keeping two copies invited exactly this kind of confusion.
+     Now there is ONE declaration of search-ai.js, site-wide, inside
+     header.html — see the comment by #site-header-include above. -->
+<script src="/config.js"></script>
+<script src="/js/header-footer-init.js" defer></script>
+<script src="/header-scroll.js" defer></script>
+<script src="/countries.js"></script>
+<script src="/script.js"></script>
+<script type="module" src="/firebase-config.js"></script>
+<script type="module" src="/auth.js"></script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/sw.js").catch(function (err) {
+      console.warn("[sw] registration failed (site still works without it):", err);
+    });
+  });
+}
+</script>
+<script>
+(function () {
+  var FEATURED_COUNT = 4;
+  var CANDIDATE_CAP = 24;
+  var gridEl = null;
+  var renderToken = 0;
+
+  function imageExists(url) {
+    return new Promise(function (resolve) {
+      if (!url) { resolve(false); return; }
+      var img = new Image();
+      img.onload = function () { resolve(true); };
+      img.onerror = function () { resolve(false); };
+      img.src = url;
+    });
+  }
+
+  function creatorCardHtml(pick) {
+    var name = escapeHtml(pick.name || "Creator");
+    var href = authorHref({ name: pick.name });
+    var avatarUrl = pick.avatarUrl || PLACEHOLDER_AVATAR;
+    return (
+      '<a class="featured-creator-card" href="' + href + '">' +
+        '<img class="featured-creator-avatar" src="' + escapeHtml(avatarUrl) + '" alt="' + name + '" ' +
+             'loading="lazy" width="88" height="88" ' +
+             'onerror="this.onerror=null;this.src=\'' + PLACEHOLDER_AVATAR + '\';">' +
+        '<span class="featured-creator-name">' + name + '</span>' +
+      '</a>'
+    );
+  }
+
+  async function pickFeaturedAuthors(count) {
+    var videos = await fetchAllVideos();
+    var seen = new Set();
+    var names = [];
+    videos.forEach(function (v) {
+      var key = normalizeName(v.author);
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      names.push(v.author);
+    });
+    names = shuffleArray(names);
+
+    var candidates = names.slice(0, Math.min(CANDIDATE_CAP, names.length));
+    var checked = await Promise.all(candidates.map(function (name) {
+      var url = authorImageUrl(name);
+      return imageExists(url).then(function (ok) {
+        return { name: name, avatarUrl: url, ok: ok };
+      });
+    }));
+
+    var picks = checked.filter(function (r) { return r.ok; }).slice(0, count);
+
+    if (picks.length < count) {
+      var usedKeys = new Set(picks.map(function (p) { return normalizeName(p.name); }));
+      for (var i = 0; i < names.length && picks.length < count; i++) {
+        var key = normalizeName(names[i]);
+        if (usedKeys.has(key)) continue;
+        usedKeys.add(key);
+        picks.push({ name: names[i], avatarUrl: PLACEHOLDER_AVATAR });
+      }
+    }
+    return picks;
+  }
+
+  async function renderFeaturedCreators() {
+    if (!gridEl) return;
+    var myToken = ++renderToken;
+    try {
+      var picks = await pickFeaturedAuthors(FEATURED_COUNT);
+      if (myToken !== renderToken) return;
+      if (!picks.length) {
+        gridEl.innerHTML = "";
+        return;
+      }
+      gridEl.innerHTML = picks.map(creatorCardHtml).join("");
+    } catch (err) {
+      console.error("[featured-creators] failed to load authors:", err);
+      if (myToken === renderToken) gridEl.innerHTML = "";
+    }
+  }
+
+  function init() {
+    gridEl = document.getElementById("featuredCreatorsGrid");
+    if (!gridEl) return;
+
+    renderFeaturedCreators();
+
+    var authWidget = document.getElementById("authWidget");
+    if (authWidget && "MutationObserver" in window) {
+      var lastHtml = authWidget.innerHTML;
+      var mo = new MutationObserver(function () {
+        if (authWidget.innerHTML === lastHtml) return;
+        lastHtml = authWidget.innerHTML;
+        renderFeaturedCreators();
+      });
+      mo.observe(authWidget, { childList: true, subtree: true });
+    }
+
+    window.addEventListener("streamhub:authchange", renderFeaturedCreators);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

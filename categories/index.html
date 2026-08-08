@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Categories — seXvid18</title>
+<meta name="description" content="Browse seXvid18 by category and tag.">
+<link rel="canonical" href="https://example.com/categories/" id="canonicalLink">
+<link rel="icon" type="image/png" href="/assets/logo-32.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Categories — seXvid18">
+<meta property="og:description" content="Browse seXvid18 by category and tag.">
+<meta property="og:image" content="/assets/logo-512.png">
+<meta property="og:url" content="https://example.com/categories/">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Categories — seXvid18">
+<meta name="twitter:description" content="Browse seXvid18 by category and tag.">
+<meta name="twitter:image" content="/assets/logo-512.png">
+
+<link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/logo-32.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/logo-192.png">
+<meta name="theme-color" content="#53FC18">
+
+<link rel="preload" href="/style.css" as="style">
+<link rel="preload" href="/config.js" as="script">
+<link rel="preload" href="/partials/header.html" as="fetch" crossorigin>
+<link rel="preload" href="/assets/logo.svg" as="image">
+
+<script>
+(function () {
+  try {
+    if (localStorage.getItem("streamhub_theme") === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  } catch (e) { /* ignore */ }
+})();
+</script>
+
+<link rel="stylesheet" href="/style.css">
+
+<!-- The old .brand-logo-img rule that used to live here is gone —
+     logo sizing is inline on the <img> inside /partials/header.html
+     now, so it doesn't need to be redefined per page. -->
+<style>
+  .xs-loader {
+    --xs-green: #53FC18;
+    --xs-dark: #0E0E10;
+    position: relative;
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    vertical-align: -8px;
+  }
+  .xs-loader__ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(var(--xs-green) 0deg, transparent 300deg);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+    animation: xs-spin 0.9s linear infinite;
+  }
+  .xs-loader__mark {
+    position: absolute;
+    inset: 6px;
+    border-radius: 22%;
+    background: var(--xs-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: xs-pulse 1.8s ease-in-out infinite;
+  }
+  .xs-loader__mark svg { width: 62%; height: 62%; display: block; }
+  @keyframes xs-spin { to { transform: rotate(360deg); } }
+  @keyframes xs-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.92); } }
+  @media (prefers-reduced-motion: reduce) {
+    .xs-loader__ring { animation: none; }
+    .xs-loader__mark { animation: none; }
+  }
+
+  /* ---- Categories landing: tile grids ---- */
+  .categories-section { margin-bottom: 34px; }
+  .categories-section h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f1f1f1;
+    margin: 0 0 14px;
+  }
+  .categories-tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+  }
+  .category-tile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #18181b;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    text-decoration: none;
+    color: #f1f1f1;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .category-tile:hover {
+    border-color: rgba(83,252,24,0.5);
+    background: #1e1e22;
+  }
+  .category-tile-name {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .category-tile-count {
+    flex: 0 0 auto;
+    font-size: 12px;
+    color: #8a8a92;
+    background: rgba(255,255,255,0.06);
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+
+  .empty-state { color: #8a8a92; font-size: 14px; padding: 12px 0; }
+
+  /* ---- Layout fix: this page has no sidebar, so it can't rely on
+     style.css's 3-column .layout grid (sidebar / content / ads),
+     which would otherwise hand content-col the sidebar's narrow
+     width and ad-column the content area's wide width. #categoriesLayout
+     is more specific than the sitewide .layout class rule, so this
+     always wins regardless of style.css's column definitions. ---- */
+  #categoriesLayout {
+    display: flex !important;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  #categoriesLayout .content-col { flex: 1 1 auto; min-width: 0; }
+  #categoriesLayout .ad-column { flex: 0 0 300px; width: 300px; }
+  @media (max-width: 980px) {
+    #categoriesLayout { flex-direction: column; }
+    #categoriesLayout .ad-column { width: 100%; flex-basis: auto; }
+  }
+
+  .related-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f1f1f1;
+    margin: 28px 0 14px;
+  }
+</style>
+</head>
+<body data-page="categories">
+
+<!-- Shared header (+ banner-strip ad + mobile nav drawer), injected
+     by include-partials.js. This page has no #sidebar, so the
+     hamburger button falls back to the drawer automatically — see
+     header-footer-init.js's hamburgerMenu(). -->
+<div id="site-header-include"></div>
+<script src="/js/include-partials.js"></script>
+
+<!-- ===================== LAYOUT ===================== -->
+<div class="layout container" id="categoriesLayout">
+
+  <main class="content-col">
+    <div class="toolbar">
+      <h1 id="gridTitle">Categories</h1>
+    </div>
+
+    <!-- LANDING VIEW: shown at /categories/ (no slug) -->
+    <div id="categoriesLanding">
+      <section class="categories-section">
+        <h2>Categories</h2>
+        <div class="categories-tile-grid" id="categoriesGrid"></div>
+      </section>
+      <section class="categories-section">
+        <h2>Tags</h2>
+        <div class="categories-tile-grid" id="tagsGrid"></div>
+      </section>
+    </div>
+
+    <!-- VIDEO GRID VIEW: shown at /categories/<slug> -->
+    <div id="videoGridSection" style="display:none;">
+      <div class="video-grid" id="videoGrid"></div>
+
+      <div class="loader-wrap" id="loaderWrap">
+        <span class="xs-loader">
+          <span class="xs-loader__ring"></span>
+          <span class="xs-loader__mark">
+            <svg viewBox="0 0 128 128">
+              <line x1="34" y1="34" x2="94" y2="94" stroke="#0E0E10" stroke-width="20" stroke-linecap="round"/>
+              <line x1="94" y1="34" x2="34" y2="94" stroke="#0E0E10" stroke-width="20" stroke-linecap="round"/>
+              <circle cx="64" cy="64" r="20" fill="#0E0E10"/>
+              <path d="M 57 55 L 57 73 L 73 64 Z" fill="#53FC18"/>
+            </svg>
+          </span>
+        </span>
+        Loading more videos…
+      </div>
+
+      <div id="scrollSentinel" style="height:1px;"></div>
+
+      <!-- Filled whenever the current tag/category has few or no
+           matches (categories.js) — pads out the page with more
+           videos instead of leaving it sparse or blank. -->
+      <div class="more-videos-section" id="moreVideosSection" style="display:none;">
+        <h2 class="related-heading">More Videos</h2>
+        <div class="video-grid" id="moreVideosGrid"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT AD COLUMN (page-specific, not header/footer) -->
+  <aside class="ad-column" id="adColumn">
+    <div class="ad-unit"><div class="ad-label">Advertisement</div><div class="ad-slot" id="adSlot1">Advertisement</div></div>
+    <div class="ad-unit"><div class="ad-label">Advertisement</div><div class="ad-slot" id="adSlot3">Advertisement</div></div>
+  </aside>
+
+</div>
+
+<!-- Shared footer, injected by include-partials.js -->
+<div id="site-footer-include"></div>
+
+<script src="/config.js"></script>
+<script type="module" src="/search-ai.js"></script>
+
+<!-- Header/footer behavior (scroll-hide, hamburger -> nav drawer,
+     sign-in fallback, back-to-top, banner-strip ad). Waits for
+     "partials:loaded". -->
+<script src="/js/header-footer-init.js" defer></script>
+
+<!-- This page's OWN ad slots — not part of the header/footer
+     partials, so header-footer-init.js doesn't touch these. -->
+<script>
+(function () {
+  var runWhenIdle = window.requestIdleCallback || function (cb) { setTimeout(cb, 1); };
+  runWhenIdle(function () {
+  var slots = [
+    ["adSlot1", "banner160x300"],
+    ["adSlot3", "banner160x600"]
+  ];
+  slots.forEach(function (pair) {
+    var id = pair[0], key = pair[1];
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (typeof fillAdSlot !== "function") return;
+    if (typeof AD_CODES === "undefined" || !AD_CODES[key] || !AD_CODES[key].trim()) return;
+    fillAdSlot(el, key);
+  });
+  if (typeof injectPageLevelAds === "function") injectPageLevelAds();
+  });
+})();
+</script>
+
+<script>
+/* categories.js — inlined directly into this page. Kept as an inline
+   <script> (not a separate file) after repeated deploy/caching issues
+   getting a standalone /categories.js served correctly with the right
+   MIME type. An inline block ships as part of this HTML response
+   itself, so there is no separate request for any redirect rule,
+   CDN cache, or service worker to intercept or mis-serve — it always
+   runs. Depends on config.js, loaded above this block.
+
+   Doesn't touch anything from the header/footer partials, so it's
+   safe to init() on plain DOMContentLoaded like before — no need to
+   wait for "partials:loaded". */
+(function () {
+  "use strict";
+
+  let allVideos = [];
+  let filtered = [];
+  let shownCount = 0;
+  let scrollObserver = null;
+
+  function skeletonCardHtml() {
+    return `<div class="video-card skeleton-card" aria-hidden="true">
+      <div class="video-thumb-wrap skeleton-shimmer"></div>
+      <div class="video-card-info">
+        <div class="skeleton-line skeleton-shimmer" style="width:85%;"></div>
+        <div class="skeleton-line skeleton-shimmer" style="width:45%;"></div>
+      </div>
+    </div>`;
+  }
+
+  function renderSkeletonBatch(count) {
+    const grid = document.getElementById("videoGrid");
+    grid.insertAdjacentHTML("beforeend", Array.from({ length: count }, skeletonCardHtml).join(""));
+  }
+
+  function matchesKey(video, key) {
+    if (normalizeName(video.category) === key) return true;
+    return Array.isArray(video.tags) && video.tags.some((t) => normalizeName(t) === key);
+  }
+
+  // Recovers a nicely-cased display name for the slug — prefers a
+  // matching category name, falls back to a matching tag's original
+  // casing, falls back to the raw slug itself if nothing matches
+  // (e.g. a stale/typo'd link).
+  function findDisplayName(key, rawSlug) {
+    for (const v of allVideos) {
+      if (normalizeName(v.category) === key) return v.category;
+    }
+    for (const v of allVideos) {
+      const hit = (v.tags || []).find((t) => normalizeName(t) === key);
+      if (hit) return hit;
+    }
+    return rawSlug;
+  }
+
+  function renderBatch() {
+    const grid = document.getElementById("videoGrid");
+    const startIndex = shownCount;
+    const remainingCap = MAX_VIDEOS_DISPLAYED - shownCount;
+
+    if (remainingCap <= 0) {
+      document.getElementById("loaderWrap").style.display = "none";
+      return;
+    }
+
+    const batchSize = shownCount === 0 ? INITIAL_LOAD_COUNT : LOAD_MORE_COUNT;
+    const next = filtered.slice(shownCount, shownCount + Math.min(batchSize, remainingCap));
+
+    grid.insertAdjacentHTML("beforeend", videoGridBatchHtml(next, startIndex));
+    shownCount += next.length;
+    wireVideoCardPreviews(grid);
+    wireLazyAdCards(grid);
+
+    const doneLoading = shownCount >= filtered.length || shownCount >= MAX_VIDEOS_DISPLAYED;
+    document.getElementById("loaderWrap").style.display = doneLoading ? "none" : "";
+  }
+
+  function wireInfiniteScroll() {
+    if (scrollObserver) {
+      scrollObserver.disconnect();
+      scrollObserver = null;
+    }
+    if (shownCount >= filtered.length || shownCount >= MAX_VIDEOS_DISPLAYED) return;
+
+    const sentinel = document.getElementById("scrollSentinel");
+    scrollObserver = new IntersectionObserver((entries) => {
+      if (!entries[0].isIntersecting) return;
+      if (shownCount >= filtered.length || shownCount >= MAX_VIDEOS_DISPLAYED) {
+        scrollObserver.disconnect();
+        scrollObserver = null;
+        return;
+      }
+      renderBatch();
+      if (shownCount >= filtered.length || shownCount >= MAX_VIDEOS_DISPLAYED) {
+        scrollObserver.disconnect();
+        scrollObserver = null;
+      }
+    }, { rootMargin: "600px" });
+    scrollObserver.observe(sentinel);
+  }
+
+  function showLanding() {
+    document.getElementById("categoriesLanding").style.display = "";
+    document.getElementById("videoGridSection").style.display = "none";
+  }
+
+  function showVideoGrid() {
+    document.getElementById("categoriesLanding").style.display = "none";
+    document.getElementById("videoGridSection").style.display = "";
+  }
+
+  // Tile now shows only the name — no count badge.
+  function categoryTileHtml(name) {
+    return `<a class="category-tile" href="${categoryHref(name)}">
+      <span class="category-tile-name">${escapeHtml(name)}</span>
+    </a>`;
+  }
+
+  function renderLandingGrid() {
+    document.getElementById("gridTitle").textContent = "Browse Categories & Tags";
+    showLanding();
+
+    // Categories: alphabetical. (Counts are still tallied to derive
+    // the category name list, but are no longer rendered on tiles.)
+    const categoryCounts = {};
+    allVideos.forEach((v) => {
+      if (!v.category) return;
+      categoryCounts[v.category] = (categoryCounts[v.category] || 0) + 1;
+    });
+    const categoryNames = Object.keys(categoryCounts).sort((a, b) => a.localeCompare(b));
+
+    document.getElementById("categoriesGrid").innerHTML =
+      categoryNames.map((c) => categoryTileHtml(c)).join("") ||
+      `<p class="empty-state">No categories yet.</p>`;
+
+    // Tags: dedupe near-duplicates and cap the browse view — same
+    // treatment as the home page's sidebar tag cloud (config.js).
+    const rawTagCounts = {};
+    allVideos.forEach((v) => (v.tags || []).forEach((t) => { rawTagCounts[t] = (rawTagCounts[t] || 0) + 1; }));
+    const { visible: tagNames } = buildCappedBrowseTags(rawTagCounts);
+
+    document.getElementById("tagsGrid").innerHTML =
+      tagNames.map((t) => categoryTileHtml(t)).join("") ||
+      `<p class="empty-state">No tags yet.</p>`;
+  }
+
+  // Minimum result count below which the page tops itself up with
+  // more videos rather than looking sparse/empty. A tag with just 1-2
+  // matches (or none at all) still gets a full page of browsing
+  // material below it.
+  const MIN_RESULTS_BEFORE_TOPUP = MORE_VIDEOS_INITIAL_COUNT || 18;
+
+  function renderMoreVideosTopup(alreadyShown) {
+    const section = document.getElementById("moreVideosSection");
+    const grid = document.getElementById("moreVideosGrid");
+
+    if (alreadyShown.length >= MIN_RESULTS_BEFORE_TOPUP) {
+      section.style.display = "none";
+      grid.innerHTML = "";
+      return;
+    }
+
+    section.style.display = "";
+    const shownIds = new Set(alreadyShown.map((v) => String(v.uniqueId ?? v.id)));
+    const pool = shuffleArray(allVideos.filter((v) => !shownIds.has(String(v.uniqueId ?? v.id))));
+    const needed = MIN_RESULTS_BEFORE_TOPUP - alreadyShown.length;
+    const batch = pool.slice(0, Math.max(needed, MORE_VIDEOS_INITIAL_COUNT || 18));
+
+    grid.innerHTML = videoGridBatchHtml(batch, 0);
+    wireVideoCardPreviews(grid);
+    wireLazyAdCards(grid);
+  }
+
+  function renderCategoryListing(rawSlug) {
+    const key = normalizeName(rawSlug); // rawSlug is already decoded by currentCategorySlugFromUrl()
+    const displayName = findDisplayName(key, rawSlug);
+
+    document.getElementById("gridTitle").textContent = `Category: ${displayName}`;
+    showVideoGrid();
+
+    filtered = allVideos.filter((v) => matchesKey(v, key));
+    shownCount = 0;
+    const grid = document.getElementById("videoGrid");
+    grid.innerHTML = "";
+
+    if (!filtered.length) {
+      grid.innerHTML = `<p class="empty-state">No videos found for "${escapeHtml(displayName)}" yet — here's more to watch instead.</p>`;
+      document.getElementById("loaderWrap").style.display = "none";
+      renderMoreVideosTopup([]);
+      return;
+    }
+
+    renderBatch();
+    wireInfiniteScroll();
+    renderMoreVideosTopup(filtered);
+  }
+
+  async function init() {
+    renderSkeletonBatch(Math.min(INITIAL_LOAD_COUNT, MAX_VIDEOS_DISPLAYED));
+
+    try {
+      allVideos = await fetchAllVideos();
+    } catch (err) {
+      console.error("[categories] fetchAllVideos failed:", err);
+      document.getElementById("videoGrid").innerHTML = "";
+      document.getElementById("gridTitle").textContent = "Couldn't load videos — check console.";
+      return;
+    }
+    document.getElementById("videoGrid").innerHTML = "";
+
+    const rawSlug = currentCategorySlugFromUrl();
+    if (rawSlug) {
+      renderCategoryListing(rawSlug);
+    } else {
+      renderLandingGrid();
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+
+<script type="module" src="/firebase-config.js"></script>
+<script type="module" src="/auth.js"></script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/sw.js").catch(function (err) {
+      console.warn("[sw] registration failed (site still works without it):", err);
+    });
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Internal search result pages are thin/duplicate content generated
+# client-side from whatever the visitor typed — no reason for these
+# to compete in the index against your real /watch/, /models/, and
+# /categories/ pages.
+Disallow: /search/
+
+# Account/auth pages have no public SEO value and shouldn't be crawled.
+Disallow: /account.html
+Disallow: /account/
+
+Sitemap: https://www.sexvid18.online/sitemap.xml
