@@ -31,6 +31,12 @@
       currentAuthorKeyFromUrl() already match author slugs — so a
       slug works whether it came from a "category" pill or a "tag"
       pill; the visitor doesn't need to know which kind it was.
+
+      The page TITLE, however, is derived directly from the slug
+      itself (slugToTitle) rather than looked up from matching video
+      data — this keeps the title consistent and independent of
+      whatever casing happens to exist in the JSON, and still shows
+      something sensible for a stale/typo'd link with no matches.
    ========================================================= */
 
 (function () {
@@ -61,19 +67,18 @@
     return Array.isArray(video.tags) && video.tags.some((t) => normalizeName(t) === key);
   }
 
-  // Recovers a nicely-cased display name for the slug — prefers a
-  // matching category name, falls back to a matching tag's original
-  // casing, falls back to the raw slug itself if nothing matches
-  // (e.g. a stale/typo'd link).
-  function findDisplayName(key, rawSlug) {
-    for (const v of allVideos) {
-      if (normalizeName(v.category) === key) return v.category;
-    }
-    for (const v of allVideos) {
-      const hit = (v.tags || []).find((t) => normalizeName(t) === key);
-      if (hit) return hit;
-    }
-    return rawSlug;
+  // Converts a URL slug like "big-tits" or "hd-porn" into a display
+  // title like "Big Tits" / "Hd Porn". Purely string-derived from the
+  // slug itself — no dependency on matching video data, so the title
+  // is always consistent and works even for a slug with zero matches.
+  function slugToTitle(rawSlug) {
+    return decodeURIComponent(rawSlug)
+      .replace(/[-_]+/g, " ")
+      .trim()
+      .split(" ")
+      .filter(Boolean)
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
   }
 
   function renderBatch() {
@@ -196,9 +201,9 @@
 
   function renderCategoryListing(rawSlug) {
     const key = normalizeName(decodeURIComponent(rawSlug));
-    const displayName = findDisplayName(key, rawSlug);
+    const displayName = slugToTitle(rawSlug);
 
-    // Title now shows just the category/tag name, no "Category:" prefix.
+    // Title comes straight from the slug now, no "Category:" prefix.
     document.getElementById("gridTitle").textContent = displayName;
     showVideoGrid();
 
