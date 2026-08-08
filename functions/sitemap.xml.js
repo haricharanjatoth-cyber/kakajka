@@ -3,7 +3,7 @@ const META_BASE = "https://json-9xs.pages.dev/meta";
 const MAX_URLS = 10000;
 const MAX_CONTENT_FILES = 400;
 const CACHE_TTL_SECONDS = 3600;
-const FETCH_CONCURRENCY = 10; // parallel batch size
+const FETCH_CONCURRENCY = 10;
 
 function escapeXml(str) {
   return String(str)
@@ -20,6 +20,16 @@ function toIsoDate(value) {
   return isNaN(d.getTime()) ? null : d.toISOString();
 }
 
+// Mirrors the slugifyName() convention used elsewhere in config.js —
+// lowercase, strip non-alphanumerics, collapse to hyphens.
+function slugify(str) {
+  return String(str)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 async function fetchContentFile(i) {
   try {
     const res = await fetch(`${META_BASE}/content${i}.json`);
@@ -34,7 +44,7 @@ async function fetchContentFile(i) {
 async function fetchAllVideos() {
   const videos = [];
   let consecutiveMisses = 0;
-  const MAX_CONSECUTIVE_MISSES = 3; // tolerate transient gaps instead of stopping on the first miss
+  const MAX_CONSECUTIVE_MISSES = 3;
 
   for (
     let start = 1;
@@ -63,6 +73,18 @@ async function fetchAllVideos() {
   return videos.slice(0, MAX_URLS);
 }
 
+function urlBlock(loc, lastmod, changefreq, priority, extra = "") {
+  return (
+    `  <url>\n` +
+    `    <loc>${escapeXml(loc)}</loc>` +
+    (lastmod ? `\n    <lastmod>${escapeXml(lastmod)}</lastmod>` : "") +
+    `\n    <changefreq>${changefreq}</changefreq>\n` +
+    `    <priority>${priority}</priority>` +
+    extra +
+    `\n  </url>`
+  );
+}
+
 export async function onRequestGet(context) {
   const cache = caches.default;
   const cacheKey = new Request(context.request.url);
@@ -73,7 +95,6 @@ export async function onRequestGet(context) {
   try {
     videos = await fetchAllVideos();
   } catch (err) {
-    // Degrade gracefully: still serve static URLs rather than a 500
     videos = [];
   }
 
@@ -82,22 +103,24 @@ export async function onRequestGet(context) {
     { loc: `${SITE_URL}/browse`, priority: "0.8", changefreq: "daily" },
   ];
 
-  const urlBlocks = [
-    ...staticUrls.map(
-      (u) =>
-        `  <url>\n` +
-        `    <loc>${escapeXml(u.loc)}</loc>\n` +
-        `    <changefreq>${u.changefreq}</changefreq>\n` +
-        `    <priority>${u.priority}</priority>\n` +
-        `  </url>`
-    ),
-    ...videos.map((v) => {
-      const slug = v.slug || v.id;
-      const lastmod = toIsoDate(v.uploadDate || v.dateAdded);
-      const loc = `${SITE_URL}/watch/${encodeURIComponent(slug)}`;
+  const seenCategorySlugs = new Set();
+  const seenModelSlugs = new Set();
 
-      // Optional video: block — only emitted if you have the fields.
-      // Comment out if you'd rather keep this a plain URL sitemap.
+  const staticBlocks = staticUrls.map((u) =>
+    urlBlock(u.loc, null, u.changefreq, u.priority)
+  );
+
+  const watchBlocks = [];
+  const categoryBlocks = [];
+  const modelBlocks = [];
+
+  for (const v of videos) {
+    // ---- /watch/:slug ---- (derived from title, per your redirect rule)
+    const watchSlug = v.slug || slugify(v.title) || v.id;
+    if (watchSlug) {
+      const lastmod = toIsoDate(v.uploadDate || v.dateAdded);
+      const loc = `${SITE_URL}/watch/${encodeURIComponent(watchSlug)}`;
+
       const videoBlock =
         v.title && v.thumbnailUrl
           ? `\n    <video:video>\n` +
@@ -115,23 +138,44 @@ export async function onRequestGet(context) {
             `    </video:video>`
           : "";
 
-      return (
-        `  <url>\n` +
-        `    <loc>${escapeXml(loc)}</loc>` +
-        (lastmod ? `\n    <lastmod>${escapeXml(lastmod)}</lastmod>` : "") +
-        `\n    <changefreq>weekly</changefreq>\n` +
-        `    <priority>0.7</priority>` +
-        videoBlock +
-        `\n  </url>`
-      );
-    }),
-  ];
+      watchBlocks.push(urlBlock(loc, lastmod, "weekly", "0.7", videoBlock));
+    }
+
+    // ---- /categories/:slug ---- (derived from tags)
+    const tags = Array.isArray(v.tags) ? v.tags : [];
+    for (const tag of tags) {
+      const catSlug = slugify(tag);
+      if (catSlug && !seenCategorySlugs.has(catSlug)) {
+        seenCategorySlugs.add(catSlug);
+        const loc = `${SITE_URL}/categories/${encodeURIComponent(catSlug)}`;
+        categoryBlocks.push(urlBlock(loc, null, "weekly", "0.6"));
+      }
+    }
+
+    // ---- /models/:slug ---- (derived from author)
+    const author = v.author || v.creator || v.channel;
+    if (author) {
+      const modelSlug = slugify(author);
+      if (modelSlug && !seenModelSlugs.has(modelSlug)) {
+        seenModelSlugs.add(modelSlug);
+        const loc = `${SITE_URL}/models/${encodeURIComponent(modelSlug)}`;
+        modelBlocks.push(urlBlock(loc, null, "weekly", "0.6"));
+      }
+    }
+  }
+
+  const allBlocks = [
+    ...staticBlocks,
+    ...watchBlocks,
+    ...categoryBlocks,
+    ...modelBlocks,
+  ].slice(0, MAX_URLS);
 
   const xml =
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n` +
     `        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n` +
-    urlBlocks.join("\n") +
+    allBlocks.join("\n") +
     `\n</urlset>`;
 
   const response = new Response(xml, {
