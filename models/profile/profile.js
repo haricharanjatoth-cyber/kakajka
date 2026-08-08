@@ -414,11 +414,11 @@
       countryRow.style.display = "none";
     }
 
-    const title = `${currentAuthor.name} — StreamHub`;
+    const title = `${currentAuthor.name} — seXvid18`;
     document.title = title;
     document.getElementById("pageTitle").textContent = title;
     document.getElementById("pageDescription").setAttribute(
-      "content", `Watch all videos from ${currentAuthor.name} on StreamHub.`
+      "content", `Watch all videos from ${currentAuthor.name} on seXvid18.`
     );
 
     renderTagsRow();
@@ -435,7 +435,7 @@
 
   function showNotFound() {
     document.getElementById("notFoundBanner").style.display = "";
-    document.title = "Creator not found — StreamHub";
+    document.title = "Creator not found — seXvid18";
   }
 
   function wireHeaderSearch() {
